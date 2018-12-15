@@ -11,6 +11,6 @@ module.exports = {
       db_url = process.env.DB_URL_DEVELOPMENT;
     }
 
-    mongoose.connect(db_url, {useNewUrlParser: true});
+    mongoose.connect(db_url, {useNewUrlParser: true, useCreateIndex: true});
   },
 };

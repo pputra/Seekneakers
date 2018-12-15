@@ -9,12 +9,11 @@ const UserSchema = new Schema({
   last_name: { type: String, required: [true, 'last name is required'] },
   email: { type: String, required: [true, 'email is required'], unique: true },
   password: { type: String, required: [true, 'invalid password'], minlength: 5},
-  addresses: [{ type: mongoose.Types.ObjectId, ref:'Address' }],
+  addresses: [{ type: mongoose.Schema.Types.ObjectId, ref:'Address' }],
   oauth: { type: Boolean, default: false },
   role: { type: String, default: 'user' },
-  cart: { type: mongoose.Types.ObjectId, ref:'Cart' },
-  orders: [{ type: mongoose.Types.ObjectId, ref:'Order' }],
-});
+  orders: [{ type: mongoose.Schema.Types.ObjectId, ref:'Order' }],
+}, {timestamps: true});
 
 UserSchema.pre('validate', function(next) {
   if (!hasValidEmail(this.email)) {
