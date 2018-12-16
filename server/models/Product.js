@@ -7,6 +7,7 @@ const ProductSchema = new Schema({
   image_src: {type:String},
   description: {type: String},
   stock: {type: Number, default: 0, required: true},
+  available: {type: Boolean, default: true},
   purchased: {type: Number, default: 0, required: true},
   category_id: {type: mongoose.Schema.Types.ObjectId, ref:'Category', required: true},
   reviews: {type: mongoose.Schema.Types.ObjectId, ref: 'Review', required: true}
