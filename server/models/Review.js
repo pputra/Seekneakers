@@ -5,9 +5,9 @@ const ReviewSchema = new Schema({
  user_id: {type: mongoose.Schema.Types.ObjectId, ref:'User'},
  title: {type: String},
  content: {type: String},
- rating: {type:Number, required: true},
- like: [{type: mongoose.Schema.Types.ObjectId, ref:'User'}],
- dislike: [{type: mongoose.Schema.Types.ObjectId, ref:'User'}],
+ rating: {type: Number, required: true},
+ likes: [{type: mongoose.Schema.Types.ObjectId, ref:'User'}],
+ dislikes: [{type: mongoose.Schema.Types.ObjectId, ref:'User'}],
 },{timestamps:true});
 
 const Review = mongoose.model('Review', ReviewSchema);

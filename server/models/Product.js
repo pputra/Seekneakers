@@ -10,7 +10,7 @@ const ProductSchema = new Schema({
   available: {type: Boolean, default: true},
   purchased: {type: Number, default: 0, required: true},
   category_id: {type: mongoose.Schema.Types.ObjectId, ref:'Category', required: true},
-  reviews: {type: mongoose.Schema.Types.ObjectId, ref: 'Review', required: true}
+  reviews: [{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]
 },{timestamps:true});
 
 const Product = mongoose.model('Product', ProductSchema);
