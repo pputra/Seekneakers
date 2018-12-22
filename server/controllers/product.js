@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
+
 module.exports = {
   getAll: (req, res) => {
     Product.find().then((products) => {
@@ -40,7 +41,7 @@ module.exports = {
       res.status(400).json({message: err.message});
     }
   },
-  updateById: (req, res) => {
+  updateById: async (req, res) => {
     const {
       name,
       price,
@@ -49,18 +50,26 @@ module.exports = {
       category_id,
     } = req.body;
     const { id } = req.params;
+  
+    try {
+      const prevProduct = await Product.findOne({_id: id});
+      const result = await Product.updateOne({_id: id}, {
+        name,
+        price,
+        image_src,
+        description,
+        category_id,
+      }, {runValidators: true});
 
-    Product.updateOne({_id: id}, {
-      name,
-      price,
-      image_src,
-      description,
-      category_id,
-    }, {runValidators: true}).then((result) => {
+      if (prevProduct.category_id != category_id) {
+        await Category.updateOne({_id: prevProduct.category_id}, {$pull: {products: id}});
+        await Category.updateOne({_id: category_id}, {$push: {products: id}});
+      }
+
       res.status(200).json({message: `product with id: ${id} has been updated`, data: result});
-    }).catch((err) => {
+    } catch (err) {
       res.status(400).json({message: err.message});
-    });
+    }
   },
   deleteById: (req, res) => {
     const { id } = req.params;
