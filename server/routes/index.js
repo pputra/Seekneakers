@@ -1,4 +1,7 @@
 const router = require('express').Router();
+const category = require('./category');
+const product = require('./product');
+
 const { register, login } = require('../controllers/auth');
 
 router.get('/', function(req, res, next) {
@@ -7,5 +10,8 @@ router.get('/', function(req, res, next) {
 
 router.post('/register', register);
 router.post('/login', login);
+//todo add middlewares
+router.use('/categories', category);
+router.use('/products', product);
 
 module.exports = router;
