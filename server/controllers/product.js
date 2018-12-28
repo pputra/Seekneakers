@@ -28,7 +28,7 @@ module.exports = {
     } = req.body;
 
     try {
-      let newProduct = await new Product({
+      const newProduct = await new Product({
         name,
         price,
         image_src,

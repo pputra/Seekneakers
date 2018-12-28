@@ -10,6 +10,6 @@ const AddressSchema = new Schema({
   country: { type: String, required: [true, 'country is required']},
 }, {timestamps: true});
 
-const Address = mongoose.model('User', AddressSchema);
+const Address = mongoose.model('Address', AddressSchema);
 
 module.exports = Address;

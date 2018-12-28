@@ -4,7 +4,7 @@ module.exports = {
   create: (req, res) => {
     const { name }  = req.body;
 
-    let newCategory = new Category({name});
+    const newCategory = new Category({name});
 
     newCategory.save().then((result) => {
       res.send(result);
