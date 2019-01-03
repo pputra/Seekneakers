@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const address = require('./address');
+const cart = require('./cart');
 const category = require('./category');
 const product = require('./product');
 
@@ -13,6 +14,7 @@ router.post('/register', register);
 router.post('/login', login);
 //todo add middlewares
 router.use('/address', address);
+router.use('/cart', cart);
 
 router.use('/categories', category);
 router.use('/products', product);
