@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { Component } from 'react';
+
+import SideDrawer from './SideDrawer';
 
 import styles from './styles';
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import CartIcon from '@material-ui/icons/ShoppingCart'
 import MoreIcon from '@material-ui/icons/MoreVert';
 
-class Navbar extends React.Component {
+class Navbar extends Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
+    openDrawer: false,
+  };
+
+  toggleDrawer = isOpen => {
+    this.setState({
+      openDrawer: isOpen,
+    });
   };
 
   handleJoinMenuOpen = event => {
@@ -87,7 +97,12 @@ class Navbar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static" className={classes.navBar}>
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+            <IconButton 
+              className={classes.menuButton} 
+              color="inherit" 
+              aria-label="Open drawer"
+              onClick={() => this.toggleDrawer(true)}
+            >
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h4" color="inherit" noWrap>
@@ -132,6 +147,18 @@ class Navbar extends React.Component {
         </AppBar>
         {renderMenu}
         {renderMobileMenu}
+        <Drawer open={this.state.openDrawer} onClose={() => this.toggleDrawer(false)}>
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={() => this.toggleDrawer(false)}
+            onKeyDown={() => this.toggleDrawer(false)}
+          >
+            <SideDrawer
+              categories={['Nike', 'Adidas']}
+            />
+          </div>
+        </Drawer>
       </div>
     );
   }
