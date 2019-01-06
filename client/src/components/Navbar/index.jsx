@@ -6,7 +6,6 @@ import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
@@ -49,7 +48,7 @@ class Navbar extends Component {
   };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
+    const { anchorEl, mobileMoreAnchorEl, openDrawer } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -78,7 +77,7 @@ class Navbar extends Component {
         <MenuItem>
           <IconButton color="inherit">
             <Badge badgeContent={5} color="secondary">
-              <CartIcon/>
+              <CartIcon />
             </Badge>
           </IconButton>
           <p>Cart</p>
@@ -124,7 +123,7 @@ class Navbar extends Component {
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
                 <Badge badgeContent={5} color="secondary">
-                  <CartIcon/>
+                  <CartIcon />
                 </Badge>
               </IconButton>
               <IconButton
@@ -147,18 +146,10 @@ class Navbar extends Component {
         </AppBar>
         {renderMenu}
         {renderMobileMenu}
-        <Drawer open={this.state.openDrawer} onClose={() => this.toggleDrawer(false)}>
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={() => this.toggleDrawer(false)}
-            onKeyDown={() => this.toggleDrawer(false)}
-          >
-            <SideDrawer
-              categories={['Nike', 'Adidas']}
-            />
-          </div>
-        </Drawer>
+        <SideDrawer
+          openDrawer={openDrawer}
+          toggleDrawer={this.toggleDrawer}
+        />
       </div>
     );
   }
