@@ -12,7 +12,8 @@ import Icon from '@material-ui/core/Icon';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 const ProductCard = props => {
-  const { classes, imageSrc, brand, name, price, fn } = props
+  const { classes, imageSrc, brand, name, price, fn } = props;
+  
   return (
     <Card className={classes.card}>
       <CardMedia
@@ -32,14 +33,14 @@ const ProductCard = props => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button fullWidth={true} onClick={() => fn()}>
+        <Button variant="outlined" fullWidth={true} onClick={() => fn()}>
           <Icon color="default">
             <AddShoppingCartIcon />
           </Icon>
         </Button>
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
 export default withStyles(styles)(ProductCard);
