@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 
-import ProductCard from '../../components/Cards/Product';
+import ProductList from './ProductList';
 
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 class Dashboard extends Component {
   state = {
-    cardIterators: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    products: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     anchorEl: null,
   };
 
@@ -26,7 +26,7 @@ class Dashboard extends Component {
   };
 
   render() {
-    const {  cardIterators, anchorEl } = this.state;
+    const {  products, anchorEl } = this.state;
     const { classes } = this.props;
     
     return (
@@ -67,21 +67,9 @@ class Dashboard extends Component {
               </Menu>
             </Grid>
           </Grid>
-          <Grid container spacing={40}>
-            {cardIterators.map(card => (
-              <Grid item key={card} sm={6} md={4} lg={3}>
-                <ProductCard
-                  imageSrc="https://static.highsnobiety.com/wp-content/uploads/2018/02/02184722/favorite-all-black-sneakers-buy-online-01-1200x800.jpg"
-                  brand="Nike"
-                  name="Air Force One"
-                  price={100}
-                  fn={() => alert('nice')}
-                />
-              </Grid>
-            ))}
-          </Grid>
-      </div>
-    </Fragment>
+          <ProductList products={products} />
+        </div>
+      </Fragment>
     );
   };
 };
