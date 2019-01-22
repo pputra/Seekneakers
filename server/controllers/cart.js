@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 
 module.exports = {
   getCart: async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     
     try {
       const cart = await Cart.findOne({user_id: userId}).populate('products.product_id');
@@ -18,7 +18,7 @@ module.exports = {
     }
   },
   addProduct: async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     const { id } = req.params;
     let cart;
     
@@ -63,7 +63,7 @@ module.exports = {
     res.status(200).json({message:'product has been added to the cart'});
   },
   modifyAmount: async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     const { id } = req.params;
     const { newAmount } = req.body;
     let cart;
@@ -111,7 +111,7 @@ module.exports = {
     res.status(200).json({message: 'cart has been updated'});
   },
   removeProduct: async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     const { id } = req.params;
     let cart;
 

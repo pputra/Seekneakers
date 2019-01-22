@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 module.exports = {
   getById: (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     const { id } = req.params;
 
     Address.findOne({_id: id, user_id: userId}).then((address) => {
@@ -18,7 +18,7 @@ module.exports = {
     });
   },
   create: async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     const { street, city, state, zip, country } = req.body;
     let address = '';
 
@@ -31,7 +31,7 @@ module.exports = {
     }
   },
   updateById: (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     const { id } = req.params;
     const { street, city, state, zip, country } = req.body;
 
@@ -53,7 +53,7 @@ module.exports = {
     });
   },
   deleteById: (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.decoded;
     const { id } = req.params;
 
     Address.deleteOne({_id: id, user_id: userId}).then((result) => {
