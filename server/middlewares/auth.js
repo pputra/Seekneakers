@@ -16,8 +16,8 @@ module.exports = {
     const decoded = hasValidToken(req.headers.token);
     
     if (decoded) {
-      User.findOne({_id: decoded.userId, role: "user"}).then((user) => {
-        if (user) {
+      User.findOne({_id: decoded.userId, role: "admin"}).then((admin) => {
+        if (admin) {
           req.decoded = decoded;
           next();
         } else {
