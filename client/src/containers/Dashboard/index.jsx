@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from 'react';
 
+import { connect } from 'react-redux';
+import { fetchProducts } from '../../store/actions/product';
+
 import ProductList from './ProductList';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -17,6 +20,11 @@ class Dashboard extends Component {
     anchorEl: null,
   };
 
+  componentDidMount() {
+    const { onFetchProducts } = this.props;
+    onFetchProducts();
+  }
+
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -32,6 +40,7 @@ class Dashboard extends Component {
     return (
       <Fragment>
         <div className={classNames(classes.layout, classes.cardGrid)}>
+          <h1>{JSON.stringify(this.props.products)}</h1>
           <Grid  className={classes.filterMenu} container spacing={16} justify="flex-start">
             <Grid item>
               <Button 
@@ -74,4 +83,12 @@ class Dashboard extends Component {
   };
 };
 
-export default withStyles(styles)(Dashboard);
+const mapStateToProps = state => ({
+  products: state.productsReducer.products,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onFetchProducts: () => dispatch(fetchProducts()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Dashboard));
