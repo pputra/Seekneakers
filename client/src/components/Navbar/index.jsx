@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import { Link } from 'react-router-dom';
 import SideDrawer from './SideDrawer';
 
 import styles from './styles';
@@ -59,10 +60,18 @@ class Navbar extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={isMenuOpen}
-        onClose={this.handleMenuClose}
+        onClick={this.handleMenuClose}
       >
-        <MenuItem>Login</MenuItem>
-        <MenuItem>Register</MenuItem>
+        <MenuItem>
+          <Link to="/login" style={{ textDecoration: 'none', color:'black' }}>
+            Login
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <Link to="/register" style={{ textDecoration: 'none', color:'black' }}>
+            Register
+          </Link>
+        </MenuItem>
       </Menu>
     );
 
@@ -105,7 +114,9 @@ class Navbar extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h4" color="inherit" noWrap>
-              Seekneakers
+              <Link to="/" style={{ textDecoration: 'none', color:'black' }}>
+                Seekneakers
+              </Link>
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
