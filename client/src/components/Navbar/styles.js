@@ -3,8 +3,6 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 const styles = theme => ({
   root: {
     width: '100%',
-    position: 'fixed',
-    zIndex: 1000
   },
   navBar: {
     backgroundColor: "white",

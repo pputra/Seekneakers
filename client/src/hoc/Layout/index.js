@@ -1,15 +1,13 @@
 import React, { Fragment } from 'react';
 
 import Navbar from '../../components/Navbar';
-import Footer from  '../../components/Footer';
 
 const Layout = props => (
   <Fragment>
     <Navbar />
-      <main>
+      <main style={{marginTop: '10px'}}>
         {props.children}
       </main>
-    <Footer />
   </Fragment>
 );
 
