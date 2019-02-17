@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import LoginForm from '../../../components/Forms/Login';
-import styles from '../../../components/Forms/Login/styles';
+import Form from './Form';
+import styles from './Form/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 class Login extends Component {
@@ -18,16 +18,17 @@ class Login extends Component {
     },
   };
 
-  handleLogin = () => {
+  handleLogin = (e) => {
     //todo
+    //e.preventDefault();
   };
 
-  handleChange = (key, val) => {
+  handleUserInput = (key, val) => {
     this.setState(({inputs}) => (
       {inputs: {...inputs, [key] : {...inputs[key],value : val}}}
     ));
   };
-
+  
   render() {
     const { inputs } = this.state;
     const { classes } = this.props;
@@ -35,11 +36,11 @@ class Login extends Component {
     return (
       <div>
         <h1>{this.state.inputs.email.value}</h1>
-        <LoginForm 
+        <Form 
           classes={classes}
           inputs={inputs}
-          foo={this.state.foo}
-          handleChange={this.handleChange}
+          handleChange={this.handleUserInput}
+          handleSubmit={this.handleLogin}
           />
       </div>
     );
