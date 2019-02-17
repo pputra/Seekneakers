@@ -12,6 +12,18 @@ module.exports = {
         return res.status(401).json({message: 'user is not authorized to access the cart'});
       }
 
+      const { products } = cart;
+      let updatedTotalPrice = 0;
+
+      products.forEach(product => {
+        const { product_id : {price}, quantity} = product;
+        product.price = price;
+        updatedTotalPrice += price * quantity;
+      });
+      
+      cart.total_price = updatedTotalPrice;
+      
+      await cart.save();
       res.status(200).json({message: 'cart has been fetched successfully', cart}); 
     } catch (err) {
       res.status(401).json({message: err.message});
@@ -23,7 +35,7 @@ module.exports = {
     let cart;
     
     try {
-      cart = await Cart.findOne({user_id: userId}).populate('products');
+      cart = await Cart.findOne({user_id: userId}).populate('products.product_id');
       
       if (!cart) {
         return res.status(401).json({message: 'user is not authorized to access the cart'});
@@ -32,45 +44,49 @@ module.exports = {
       res.status(401).json({message: err.message});
     }
 
+    const { products } = cart;
     let updatedTotalPrice = 0;
 
-    for (const product of cart.products) {
-      const productToCheck = await Product.findOne({_id: product.product_id});
+    products.forEach(product => {
+      const { product_id : {price}, quantity} = product;
+      product.price = price;
+      updatedTotalPrice += price * quantity;
+    });
+    
+    cart.total_price = updatedTotalPrice;
+    
+    await cart.save();
 
-      updatedTotalPrice += product.quantity * productToCheck.price;
-    }
+    const productIndex = products.findIndex(product => (product.product_id._id == id));
 
-    const productIndex = cart.products.findIndex((product) => (product.product_id == id));
-    const productToAdd = await Product.findOne({_id: id});
-    const productPrice = productToAdd.price;
+    if (productIndex === -1) {
+      let newProductPrice;
+      try {
+        const productToAdd = await Product.findOne({_id: id});
+        newProductPrice = productToAdd.price;
+      } catch (err) {
+        res.status(400).json({message: err.message});
+      }
+      cart.products.push({product_id: id, quantity: 1, price: newProductPrice});
 
-    if (productIndex === -1 ) {
-      await Cart.updateOne({user_id: userId}, 
-        {
-          $push: {
-            products: {product_id: id, quantity: 1, price: productPrice}
-          }, 
-          total_price: updatedTotalPrice + total_price
-        });
+      cart.total_price += newProductPrice;
     } else {
+      products[productIndex].quantity++;
 
-      cart.products[productIndex].quantity++;
-      cart.products[productIndex].price = productPrice;
-      cart.total_price = updatedTotalPrice + productPrice;
-
-      await cart.save(); 
+      cart.total_price += products[productIndex].price;
     }
+    await cart.save(); 
+
     res.status(200).json({message:'product has been added to the cart'});
   },
-  modifyAmount: async (req, res) => {
+  modifyQuantity: async (req, res) => {
     const { userId } = req.decoded;
     const { id } = req.params;
-    const { newAmount } = req.body;
+    const { newQuantity } = req.body;
     let cart;
-    let productToUpdate;
-
+    
     try {
-      cart = await Cart.findOne({user_id: userId}).populate('products');
+      cart = await Cart.findOne({user_id: userId}).populate('products.product_id');
       
       if (!cart) {
         return res.status(401).json({message: 'user is not authorized to access the cart'});
@@ -79,19 +95,25 @@ module.exports = {
       res.status(401).json({message: err.message});
     }
 
-    try {
-      productToUpdate = await Product.findOne({_id: id});
-    } catch (err) {
-      res.status(400).json({message: err.message});
-    }
+    const { products } = cart;
+    let updatedTotalPrice = 0;
 
-    const productIndex = cart.products.findIndex((product) => (product.product_id == id));
-    const prevPrice = cart.products[productIndex].price;
+    products.forEach(product => {
+      const { product_id : {price}, quantity} = product;
+      product.price = price;
+      updatedTotalPrice += price * quantity;
+    });
+    
+    cart.total_price = updatedTotalPrice;
+    
+    await cart.save();
+
+    const productIndex = cart.products.findIndex(product => (product.product_id._id == id));
     const prevQuantity = cart.products[productIndex].quantity;
-    const { price } = productToUpdate;
-
-    if (newAmount <= 0 || newAmount > 10) {
-      return res.status(400).json({message: 'invalid product amount'});
+    const { price, stock } = cart.products[productIndex].product_id;
+   
+    if (newQuantity <= 0 || newQuantity > stock) {
+      return res.status(400).json({message: 'invalid product quantity'});
     }
 
     try {
@@ -100,9 +122,9 @@ module.exports = {
         'products.product_id': id
       }, {
         $set: {
-          'products.$.quantity': newAmount
+          'products.$.quantity': newQuantity
         },
-        total_price: cart.total_price - (prevPrice * prevQuantity) + (price * newAmount)
+        total_price: cart.total_price - (price * prevQuantity) + (price * newQuantity)
       });
     } catch (err) {
       res.status(400).json({message: err.message});
@@ -113,10 +135,11 @@ module.exports = {
   removeProduct: async (req, res) => {
     const { userId } = req.decoded;
     const { id } = req.params;
+    const { empty_cart } = req.query;
     let cart;
 
     try {
-      cart = await Cart.findOne({user_id: userId}).populate('products');
+      cart = await Cart.findOne({user_id: userId}).populate('products.product_id');
       
       if (!cart) {
         return res.status(401).json({message: 'user is not authorized to access the cart'});
@@ -125,7 +148,33 @@ module.exports = {
       res.status(401).json({message: err.message});
     }
 
-    const productIndex = cart.products.findIndex((product) => (product.product_id == id));
+    if (empty_cart === 'true') {
+      cart.products = [];
+
+      await cart.save();
+
+      return res.status(200).json({message: 'cart has been emptied'});
+    }
+
+    const { products } = cart;
+    let updatedTotalPrice = 0;
+
+    products.forEach(product => {
+      const { product_id : {price}, quantity} = product;
+      product.price = price;
+      updatedTotalPrice += price * quantity;
+    });
+    
+    cart.total_price = updatedTotalPrice;
+    
+    await cart.save();
+
+    const productIndex = products.findIndex(product => (product.product_id == id));
+
+    if (productIndex === -1) {
+      return res.status(400).json({message: 'unable to locate the product'});
+    }
+
     const prevPrice = cart.products[productIndex].price;
     const prevQuantity = cart.products[productIndex].quantity;
 

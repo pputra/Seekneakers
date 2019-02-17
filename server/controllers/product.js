@@ -48,6 +48,7 @@ module.exports = {
       image_src,
       description,
       category_id,
+      stock,
     } = req.body;
     const { id } = req.params;
   
@@ -59,6 +60,7 @@ module.exports = {
         image_src,
         description,
         category_id,
+        stock,
       }, {runValidators: true});
 
       if (prevProduct.category_id != category_id) {

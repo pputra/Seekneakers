@@ -20,10 +20,9 @@ module.exports = {
   create: async (req, res) => {
     const { userId } = req.decoded;
     const { street, city, state, zip, country } = req.body;
-    let address = '';
 
     try {
-      address = await new Address({user_id: userId, street, city, state, zip, country}).save();
+      const address = await new Address({user_id: userId, street, city, state, zip, country}).save();
       await User.updateOne({_id: userId}, {$push:{addresses: address._id}});
       res.status(201).json({message: 'address has been added', address});
     } catch (err) {
