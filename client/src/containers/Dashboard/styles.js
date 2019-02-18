@@ -13,7 +13,7 @@ const styles = theme => ({
     marginTop: '1px',
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing.unit * 1}px 0`,
   },
   footer: {
     backgroundColor: theme.palette.background.paper,

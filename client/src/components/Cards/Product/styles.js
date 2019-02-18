@@ -5,7 +5,7 @@ const styles = theme => ({
     flexDirection: 'column',
   },
   cardMedia: {
-    paddingTop: '56.25%',
+    paddingTop: '70%',
   },
   cardContent: {
     flexGrow: 1,

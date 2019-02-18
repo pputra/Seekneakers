@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import { connect } from 'react-redux';
+import { login } from '../../../store/actions/auth';
+
 import Form from './Form';
 import styles from './Form/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -19,8 +22,16 @@ class Login extends Component {
   };
 
   handleLogin = (e) => {
-    //todo
-    //e.preventDefault();
+    const {
+      inputs: {
+        email,
+        password,
+      }
+    } = this.state;
+    const { onLogin } = this.props;
+    e.preventDefault();
+
+    onLogin(email.value, password.value);
   };
 
   handleUserInput = (key, val) => {
@@ -35,7 +46,6 @@ class Login extends Component {
 
     return (
       <div>
-        <h1>{this.state.inputs.email.value}</h1>
         <Form 
           classes={classes}
           inputs={inputs}
@@ -47,4 +57,8 @@ class Login extends Component {
   };
 };
 
-export default withStyles(styles)(Login);
+const mapDispatchToProps = dispatch => ({
+  onLogin: (email, password) => dispatch(login(email, password)),
+});
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(Login));
