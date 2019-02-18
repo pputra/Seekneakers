@@ -8,16 +8,20 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
 const Menus = props => {
-  const { classes } = props;
+  const { classes, categories, handleSelectedCategory } = props;
   return (
     <div className={classes.list}>
         <List>
           <ListItem button>
             <ListItemText primary={'Shop By Category'}/>
           </ListItem>
-          {props.categories.map((category, id) => (
-            <ListItem button key={id}>
-              <ListItemText secondary={category}/>
+          {categories.map(({name, _id}) => (
+            <ListItem button key={_id}>
+              <ListItemText 
+                secondary={name} 
+        
+                onClick={() => handleSelectedCategory(_id)}
+              />
             </ListItem>
           ))}
           <Divider/>

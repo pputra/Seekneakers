@@ -9,13 +9,15 @@ export const fetchProducts = () => {
     });
 
     try {
-      const products = await axios({
+      const response = await axios({
         method: 'GET',
         url: `${DEFAULT_URI}/products`
       });
-      
+
+      const { products } = response.data;
+
       dispatch({
-        type: actionTypes.FETCH_PRODUCT,
+        type: actionTypes.FETCH_PRODUCTS,
         products
       });
     } catch (err) {
@@ -24,4 +26,48 @@ export const fetchProducts = () => {
       });
     }
   };
+};
+
+export const fetchProductsByCategory = categoryId => {
+  return async dispatch => {
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${DEFAULT_URI}/categories/${categoryId}`
+      }); 
+
+      const { products } = response.data.category;
+  
+      dispatch({
+        type: actionTypes.FETCH_PRODUCTS,
+        products
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.ERROR
+      });
+    }
+  }
+};
+
+export const fetchCategories = () => {
+  return async dispatch => {
+    try {
+        const response = await axios({
+          method: 'GET',
+          url: `${DEFAULT_URI}/categories`
+        });
+  
+        const { categories } = response.data;
+  
+        dispatch({
+          type: actionTypes.FETCH_CATEGORIES,
+          categories,
+        });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.ERROR
+      });
+    }
+  }
 };

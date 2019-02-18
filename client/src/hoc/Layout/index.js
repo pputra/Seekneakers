@@ -5,7 +5,7 @@ import Navbar from '../../components/Navbar';
 const Layout = props => (
   <Fragment>
     <Navbar />
-      <main style={{marginTop: '10px'}}>
+      <main>
         {props.children}
       </main>
   </Fragment>

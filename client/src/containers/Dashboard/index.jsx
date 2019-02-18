@@ -34,13 +34,12 @@ class Dashboard extends Component {
   };
 
   render() {
-    const {  products, anchorEl } = this.state;
-    const { classes } = this.props;
-    
+    const { anchorEl } = this.state;
+    const { classes, products } = this.props;
+
     return (
       <Fragment>
         <div className={classNames(classes.layout, classes.cardGrid)}>
-          <h1>{JSON.stringify(this.props.products)}</h1>
           <Grid  className={classes.filterMenu} container spacing={16} justify="flex-start">
             <Grid item>
               <Button 

@@ -3,7 +3,7 @@ const Category = require('../models/Category');
 
 module.exports = {
   getAll: (req, res) => {
-    Product.find().then((products) => {
+    Product.find().populate('category_id', 'name').then((products) => {
       res.status(200).json({message: 'products has been fetched', products});
     }).catch((err) => {
       res.status(400).json({message: 'unable to fetch products'});

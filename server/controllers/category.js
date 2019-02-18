@@ -13,16 +13,16 @@ module.exports = {
     });
   },
   getAll: (req, res) => {
-    Category.find().populate('products').then((categories) => {
+    Category.find().then((categories) => {
       res.status(200).json({message: 'categories has been fetched', categories})
     }).catch((err) => {
       res.status(400).json({message: 'unable to fetch categories'});
     });
   },
-  getById: () => {
+  getById: (req, res) => {
     const { id } = req.params;
 
-    Category.findOne({_id: id}).then((category) => {
+    Category.findOne({_id: id}).populate('products').then((category) => {
       res.status(200).json({message: 'category has been fetched', category});
     }).catch((err) => {
       res.status(400).json({message: 'unable to fetch the category'});

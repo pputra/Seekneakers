@@ -8,14 +8,14 @@ const Productlist = props => {
   
   return (
     <Grid container spacing={40}>
-      {products.map(card => (
-        <Grid item key={card} sm={6} md={4} lg={3}>
+      {products.map(product => (
+        <Grid item key={product._id} sm={6} md={4} lg={3}>
           <ProductCard
-            imageSrc="https://static.highsnobiety.com/wp-content/uploads/2018/02/02184722/favorite-all-black-sneakers-buy-online-01-1200x800.jpg"
-            brand="Nike"
-            name="Air Force One"
-            price={100}
-            fn={() => alert('nice')}
+            imageSrc={product.image_src}
+            brand={product.category_id.name}
+            name={product.name}
+            price={product.price}
+            fn={() => alert(product._id)}
           />
         </Grid>
       ))}

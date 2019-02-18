@@ -5,7 +5,12 @@ import Menus from "./Menus";
 import Drawer from '@material-ui/core/Drawer';
 
 const SideDrawer = props => {
-  const { openDrawer, toggleDrawer } = props;
+  const { 
+    openDrawer, 
+    toggleDrawer, 
+    categories, 
+    handleSelectedCategory 
+  } = props;
   return (
     <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
       <div
@@ -15,7 +20,8 @@ const SideDrawer = props => {
         onKeyDown={() => toggleDrawer(false)}
       >
         <Menus
-          categories={['Nike', 'Adidas']}
+          categories={categories}
+          handleSelectedCategory={handleSelectedCategory}
         />
       </div>
     </Drawer>

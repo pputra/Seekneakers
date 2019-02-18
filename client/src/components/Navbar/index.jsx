@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchCategories, fetchProductsByCategory } from '../../store/actions/product';
+
 import SideDrawer from './SideDrawer';
 
 import styles from './styles';
@@ -24,6 +27,11 @@ class Navbar extends Component {
     mobileMoreAnchorEl: null,
     openDrawer: false,
   };
+
+  componentDidMount() {
+    const { onFetchCategories } = this.props
+    onFetchCategories();
+  }
 
   toggleDrawer = isOpen => {
     this.setState({
@@ -50,7 +58,7 @@ class Navbar extends Component {
 
   render() {
     const { anchorEl, mobileMoreAnchorEl, openDrawer } = this.state;
-    const { classes } = this.props;
+    const { classes, categories, onFetchProductsByCategory } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -160,10 +168,21 @@ class Navbar extends Component {
         <SideDrawer
           openDrawer={openDrawer}
           toggleDrawer={this.toggleDrawer}
+          categories={categories}
+          handleSelectedCategory={onFetchProductsByCategory}
         />
       </div>
     );
   }
 }
 
-export default withStyles(styles)(Navbar);
+const mapStateToProps = state => ({
+  categories: state.productsReducer.categories,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onFetchCategories: () => dispatch(fetchCategories()),
+  onFetchProductsByCategory: (categoryId) => dispatch(fetchProductsByCategory(categoryId)), 
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Navbar));
