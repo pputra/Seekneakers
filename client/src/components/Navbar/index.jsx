@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCategories, fetchProductsByCategory } from '../../store/actions/product';
+import { fetchCart } from '../../store/actions/cart';
 
 import SideDrawer from './SideDrawer';
 
@@ -29,8 +30,9 @@ class Navbar extends Component {
   };
 
   componentDidMount() {
-    const { onFetchCategories } = this.props
+    const { onFetchCategories, onFetchCart } = this.props
     onFetchCategories();
+    onFetchCart();
   }
 
   toggleDrawer = isOpen => {
@@ -93,7 +95,7 @@ class Navbar extends Component {
       >
         <MenuItem>
           <IconButton color="inherit">
-            <Badge badgeContent={5} color="secondary">
+            <Badge badgeContent={this.props.cartTotalQuantity} color="secondary">
               <CartIcon />
             </Badge>
           </IconButton>
@@ -141,7 +143,7 @@ class Navbar extends Component {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
-                <Badge badgeContent={5} color="secondary">
+                <Badge badgeContent={this.props.cartTotalQuantity} color="secondary">
                   <CartIcon />
                 </Badge>
               </IconButton>
@@ -178,11 +180,15 @@ class Navbar extends Component {
 
 const mapStateToProps = state => ({
   categories: state.productsReducer.categories,
+  productsInCart: state.cartReducer.products,
+  cartTotalPrice: state.cartReducer.totalPrice,
+  cartTotalQuantity: state.cartReducer.totalQuantity,
 });
 
 const mapDispatchToProps = dispatch => ({
   onFetchCategories: () => dispatch(fetchCategories()),
-  onFetchProductsByCategory: (categoryId) => dispatch(fetchProductsByCategory(categoryId)), 
+  onFetchProductsByCategory: (categoryId) => dispatch(fetchProductsByCategory(categoryId)),
+  onFetchCart: () => dispatch(fetchCart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Navbar));

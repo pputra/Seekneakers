@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 
 import { connect } from 'react-redux';
 import { fetchProducts } from '../../store/actions/product';
+import { addProductToCartById } from '../../store/actions/cart';
 
 import ProductList from './ProductList';
 
@@ -16,7 +17,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 class Dashboard extends Component {
   state = {
-    products: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     anchorEl: null,
   };
 
@@ -35,7 +35,7 @@ class Dashboard extends Component {
 
   render() {
     const { anchorEl } = this.state;
-    const { classes, products } = this.props;
+    const { classes, history, products, onProductAddedToCartById } = this.props;
 
     return (
       <Fragment>
@@ -75,7 +75,11 @@ class Dashboard extends Component {
               </Menu>
             </Grid>
           </Grid>
-          <ProductList products={products} />
+          <ProductList 
+            history={history}
+            products={products} 
+            handleAddProductToCart={onProductAddedToCartById}
+          />
         </div>
       </Fragment>
     );
@@ -88,6 +92,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onFetchProducts: () => dispatch(fetchProducts()),
+  onProductAddedToCartById: (productId, history) => dispatch(addProductToCartById(productId, history)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Dashboard));
