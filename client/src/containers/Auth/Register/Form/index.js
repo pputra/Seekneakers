@@ -8,7 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-const LoginForm = props => {
+const RegisterForm = props => {
   const { classes, data, handleChange, handleSubmit } = props;
   
   return (
@@ -16,7 +16,7 @@ const LoginForm = props => {
       <CssBaseline />
       <Paper className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Login
+          Register
         </Typography>
         <form className={classes.form}>
           {data.map(({ value, key, type, label }, i) => {
@@ -43,7 +43,7 @@ const LoginForm = props => {
             className={classes.submit}
             onClick={(e) => handleSubmit(e)}
           >
-            Log In
+            Register Here
           </Button>
         </form>
       </Paper>
@@ -51,4 +51,4 @@ const LoginForm = props => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

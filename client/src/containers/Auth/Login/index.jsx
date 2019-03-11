@@ -35,11 +35,13 @@ class Login extends Component {
       {
         value: email,
         key: 'email',
+        type: 'email',
         label: 'email',
       },
       {
         value: password,
         key: 'password',
+        type: 'password',
         label: 'password',
       },
     ];

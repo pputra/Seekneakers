@@ -7,7 +7,13 @@ const { generateToken } = require('../helpers/jsonwebtoken');
 
 module.exports = {
   register: async (req, res) => {
-    const { first_name, last_name, email, password, password_repeat } = req.body;
+    const { 
+      first_name, 
+      last_name, 
+      email, 
+      password, 
+      password_repeat 
+    } = req.body;
 
     if (password !== password_repeat) {
       return res.status(400).json({message: "passwords don't match"});
@@ -34,7 +40,7 @@ module.exports = {
 
     User.findOne({email: email, password: encrypt(password)}).then((user) => {
       if (user) {
-        let token = generateToken(user._id, email);
+        const token = generateToken(user._id, email);
         res.status(200).json({message: 'user has been sucessfully logged in', token });
       } else {
         res.status(400).json({message: 'invalid email or password'});

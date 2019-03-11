@@ -7,6 +7,7 @@ import store from './store';
 import Layout from './hoc/Layout';
 import Dashboard from './containers/Dashboard';
 import Login from './containers/Auth/Login';
+import Register from './containers/Auth/Register';
 
 class App extends Component {
   render() {
@@ -17,6 +18,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Dashboard} />
               <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
             </Switch>
           </Layout>
         </Router>

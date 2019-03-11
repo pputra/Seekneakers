@@ -3,7 +3,7 @@ import { DEFAULT_URI } from'../../../config'
 import * as actionTypes from '../actionTypes';
 
 export const login = (email, password) => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch({
       type: actionTypes.LOADING
     });
@@ -29,8 +29,34 @@ export const login = (email, password) => {
       });
     } catch (err) {
       dispatch({
-        type: actionTypes.ERROR
+        type: actionTypes.LOGIN_FAILED
       });
     }
   }
-}
+};
+
+export const register = (firstName, lastName, email, password, passwordRepeat) => {
+  return async dispatch => {
+    dispatch({
+      type: actionTypes.REGISTER_LOADING,
+    });
+
+    try {
+      axios({
+        method: 'POST',
+        url: `${DEFAULT_URI}/auth/register`,
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password,
+          password_repeat: passwordRepeat,
+        },
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.REGISTER_FAILED
+      });
+    }
+  }
+};
