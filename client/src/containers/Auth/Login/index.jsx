@@ -9,46 +9,46 @@ import withStyles from '@material-ui/core/styles/withStyles';
 
 class Login extends Component {
   state = {
-    inputs: {
-      email: {
-        label: 'Email Address',
-        value: '',
-      },
-      password: {
-        label: 'Password',
-        value: '',
-      },
-    },
+    email: '',
+    password: '',
   };
 
   handleLogin = (e) => {
-    const {
-      inputs: {
-        email,
-        password,
-      }
-    } = this.state;
+    const { email, password } = this.state;
     const { onLogin } = this.props;
-    e.preventDefault();
 
-    onLogin(email.value, password.value);
+    e.preventDefault();
+    
+    onLogin(email, password);
   };
 
   handleUserInput = (key, val) => {
-    this.setState(({inputs}) => (
-      {inputs: {...inputs, [key] : {...inputs[key],value : val}}}
-    ));
+    this.setState({
+      [key]: val
+    });
   };
   
   render() {
-    const { inputs } = this.state;
+    const { email, password } = this.state;
     const { classes } = this.props;
+    const inputs = [
+      {
+        value: email,
+        key: 'email',
+        label: 'email',
+      },
+      {
+        value: password,
+        key: 'password',
+        label: 'password',
+      },
+    ];
 
     return (
       <div>
         <Form 
           classes={classes}
-          inputs={inputs}
+          data={inputs}
           handleChange={this.handleUserInput}
           handleSubmit={this.handleLogin}
           />

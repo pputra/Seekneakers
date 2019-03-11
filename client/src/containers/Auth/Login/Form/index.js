@@ -9,7 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 const LoginForm = props => {
-  const { classes, inputs, handleChange, handleSubmit } = props;
+  const { classes, data, handleChange, handleSubmit } = props;
+  
   return (
     <main className={classes.main}>
       <CssBaseline />
@@ -18,8 +19,7 @@ const LoginForm = props => {
           Login
         </Typography>
         <form className={classes.form}>
-          {Object.keys(inputs).map((key, i) => {
-            const { label, value } = inputs[key];
+          {data.map(({ value, key, label }, i) => {
             return (
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor={key}>{label}</InputLabel>
@@ -31,7 +31,7 @@ const LoginForm = props => {
                 autoFocus={i === 0 && true}
                 value={value} 
                 onChange={({target: {value}}) => handleChange(key, value)}
-                />
+              />
             </FormControl>
             );
           })}
