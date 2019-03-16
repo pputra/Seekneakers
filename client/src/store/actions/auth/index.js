@@ -1,4 +1,5 @@
 import axios from 'axios';
+import history from '../../../history';
 import { DEFAULT_URI } from'../../../config'
 import * as actionTypes from '../actionTypes';
 
@@ -42,7 +43,7 @@ export const register = (firstName, lastName, email, password, passwordRepeat) =
     });
 
     try {
-      axios({
+      await axios({
         method: 'POST',
         url: `${DEFAULT_URI}/auth/register`,
         data: {
@@ -53,6 +54,7 @@ export const register = (firstName, lastName, email, password, passwordRepeat) =
           password_repeat: passwordRepeat,
         },
       });
+      history.push('/login');
     } catch (err) {
       dispatch({
         type: actionTypes.REGISTER_FAILED
