@@ -1,5 +1,6 @@
 import React from 'react';
 
+import history from '../../../../history';
 import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -19,7 +20,6 @@ const Menus = props => {
             <ListItem button key={_id}>
               <ListItemText 
                 secondary={name} 
-        
                 onClick={() => handleSelectedCategory(_id)}
               />
             </ListItem>
@@ -27,6 +27,12 @@ const Menus = props => {
           <Divider/>
           <ListItem button>
             <ListItemText primary={'Cart'}/>
+          </ListItem>
+          <ListItem button>
+          <ListItemText 
+            primary={'Checkout'}
+            onClick={() => history.push('/checkout')}
+          />
           </ListItem>
           <Divider/>
           <ListItem button>
