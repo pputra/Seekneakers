@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
-import CountryOptions from './CountryOptions';
+import { CountryOptions, USStateOptions } from '../../../../../components/Options';
 
 const Form = props => {
   const { 
@@ -14,7 +14,8 @@ const Form = props => {
     handleNext, 
     handleBack, 
     inputs, 
-    activeStep, 
+    activeStep,
+    selectedCountry, 
   } = props;
     
   return (
@@ -34,6 +35,21 @@ const Form = props => {
                   </Select>
                 </FormControl>
               );
+            }
+
+            if (key === 'state' && selectedCountry === 'US') {
+              return (
+                <FormControl className={classes.textField}>
+                  <InputLabel htmlFor="state">State</InputLabel>
+                  <Select
+                    native
+                    value={value}
+                    onChange={({target: {value}}) => handleChange(key, value)}
+                  >
+                    <USStateOptions />
+                  </Select>
+                </FormControl>
+              )
             }
 
             return (

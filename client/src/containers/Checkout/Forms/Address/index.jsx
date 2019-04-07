@@ -1,31 +1,20 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
+import { 
+  setActiveStep, 
+  handleCheckoutForm, 
+  submitShippingAddress, 
+} from '../../../../store/actions/checkout';
 
 import Form from './Form';
 import styles from './Form/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 class Address extends Component {
-  state = {
-      name: '',
-      street: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: '',
-      phone: '',
-      email: '',
-  };
-
-  handleUserInput = (key, val) => {
-    this.setState({
-      [key]: val
-    });
-  };
-
-  render() {
-    const {
+  onSubmitAddress = () => {
+    const { 
+      submitShippingAddress, 
       name,
       street,
       city,
@@ -34,57 +23,86 @@ class Address extends Component {
       country,
       phone,
       email,
-    } = this.state;
-    const { classes, activeStep, handleNext, handleBack } = this.props;
+    } = this.props;
+
+    const data = { 
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      phone,
+      email,
+    };
+
+    submitShippingAddress(data);
+  }
+
+  render() {
+    const { 
+      classes, 
+      activeStep, 
+      handleCheckoutForm, 
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      phone,
+      email,
+      setActiveStep 
+    } = this.props;
 
     const inputs = [
       {
         value: name,
         key: 'name',
         type: 'name',
-        label: 'name',
+        label: 'Full Name',
       },
       {
         value: street,
         key: 'street',
         type: 'street',
-        label: 'street',
+        label: 'Street Name',
       },
       {
         value: city,
         key: 'city',
         type: 'city',
-        label: 'city',
+        label: 'City',
       },
       {
         value: state,
         key: 'state',
         type: 'state',
-        label: 'state',
+        label: 'State',
       },
       {
         value: zip,
         key: 'zip',
         type: 'zip',
-        label: 'zip',
+        label: 'ZIP Code',
       },
       {
         value: country,
         key: 'country',
         type: 'country',
-        label: 'country',
+        label: 'Country',
       },
       {
         value: phone,
         key: 'phone',
         type: 'phone',
-        label: 'phone',
+        label: 'Phone Number',
       },
       {
         value: email,
         key: 'email',
         type: 'email',
-        label: 'email',
+        label: 'Email Address',
       }
     ];
 
@@ -92,13 +110,32 @@ class Address extends Component {
       <Form 
         inputs={inputs}
         activeStep={activeStep}
-        handleChange={this.handleUserInput}
+        selectedCountry={country}
+        handleChange={handleCheckoutForm}
         classes={classes}
-        handleNext={handleNext}
-        handleBack={handleBack}
+        handleNext={this.onSubmitAddress}
+        handleBack={() => setActiveStep(activeStep - 1)}
       />
     );
   };
 };
 
-export default connect(null, null)(withStyles(styles)(Address));
+const mapStateToProps = state => ({
+  activeStep: state.checkoutReducer.activeStep,
+  name: state.checkoutReducer.name,
+  street: state.checkoutReducer.street,
+  city: state.checkoutReducer.city,
+  state: state.checkoutReducer.state,
+  zip: state.checkoutReducer.zip,
+  country: state.checkoutReducer.country,
+  phone: state.checkoutReducer.phone,
+  email: state.checkoutReducer.email,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setActiveStep: (currStep) => dispatch(setActiveStep(currStep)),
+  handleCheckoutForm: (key, value) => dispatch(handleCheckoutForm(key, value)),
+  submitShippingAddress: (data) => dispatch(submitShippingAddress(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Address));

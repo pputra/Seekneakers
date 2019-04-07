@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
+import { setActiveStep } from '../../store/actions/checkout';
 
 import styles from './styles';
 import AddressForm from './Forms/Address';
+import ShippingForm from './Forms/Shipping';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -13,10 +15,6 @@ import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core';
 
 class Checkout extends Component {
-  state = {
-    activeStep: 0,
-  };
-
   handleNext = () => {
     this.setState(state => ({
       activeStep: state.activeStep + 1,
@@ -37,21 +35,15 @@ class Checkout extends Component {
   };
 
   renderStepContent = () => {
-    const { activeStep } = this.state
+    const { activeStep } = this.props;
     switch (activeStep) {
       case 0:
         return (
-          <AddressForm 
-            activeStep={activeStep} 
-            handleNext={this.handleNext} 
-            handleBack={this.handleBack} 
-          />
+          <AddressForm />
         ); 
       case 1:
         return (
-          <div>
-             TODO shipping options here
-          </div>
+          <ShippingForm />
         ); 
       case 2:
         return ( 
@@ -61,18 +53,13 @@ class Checkout extends Component {
         );
       default:
         return (
-          <AddressForm 
-            activeStep={activeStep} 
-            handleNext={this.handleNext} 
-            handleBack={this.handleBack} 
-          />
+          <AddressForm />
         );
     }
   }
 
   render() {
-    const { classes } = this.props;
-    const { activeStep } = this.state;
+    const { classes, activeStep, setActiveStep } = this.props;
 
     const steps = [
       'Select Address', 
@@ -90,9 +77,9 @@ class Checkout extends Component {
           ))}
         </Stepper>
         <Grid container spacing={12} justify={'center'}>
-          {this.state.activeStep === steps.length ? (
+          {activeStep === steps.length ? (
             <div>
-              <Typography className={classes.instructions}>All steps completed</Typography>
+              <Typography className={classes.instructions}>Your order has been placed</Typography>
               <Button onClick={this.handleReset}>Back to home</Button>
             </div>
           ) : (
@@ -103,7 +90,7 @@ class Checkout extends Component {
               <div>
                 <Button
                   disabled={activeStep === 0}
-                  onClick={this.handleBack}
+                  onClick={() => setActiveStep(activeStep - 1)}
                   className={classes.backButton}
                 >
                   Back
@@ -111,7 +98,7 @@ class Checkout extends Component {
                 <Button 
                   variant="contained" 
                   color="primary" 
-                  onClick={this.handleNext}
+                  onClick={() => setActiveStep(activeStep + 1)}
                 >
                   {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                 </Button>
@@ -124,4 +111,12 @@ class Checkout extends Component {
   }
 };
 
-export default connect(null, null)(withStyles(styles)(Checkout));
+const mapStateToProps = state => ({
+  activeStep: state.checkoutReducer.activeStep,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setActiveStep: (currStep) => dispatch(setActiveStep(currStep)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout));

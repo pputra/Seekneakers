@@ -60,7 +60,7 @@ module.exports = {
       }
     }).then((result) => {
       const { rates } = result.data;
-      let availabeRates = [];
+      let availableRates = [];
       
       rates.forEach(rate => {
         const {
@@ -72,7 +72,7 @@ module.exports = {
           amount
         } = rate
 
-        availabeRates.push({
+        availableRates.push({
           provider,
           name,
           image: provider_image_200,
@@ -84,7 +84,7 @@ module.exports = {
 
       res.status(200).json({
         message: 'rate has been fetched successfully', 
-        availabeRates,
+        availableRates,
       });
           
     }).catch((err) => {
