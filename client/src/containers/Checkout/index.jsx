@@ -36,14 +36,15 @@ class Checkout extends Component {
     this.props.history.push('/');
   };
 
-  renderStepContent = (activeStep, handleNext, handleBack) => {
+  renderStepContent = () => {
+    const { activeStep } = this.state
     switch (activeStep) {
       case 0:
         return (
           <AddressForm 
             activeStep={activeStep} 
-            handleNext={handleNext} 
-            handleBack={handleBack} 
+            handleNext={this.handleNext} 
+            handleBack={this.handleBack} 
           />
         ); 
       case 1:
@@ -62,8 +63,8 @@ class Checkout extends Component {
         return (
           <AddressForm 
             activeStep={activeStep} 
-            handleNext={handleNext} 
-            handleBack={handleBack} 
+            handleNext={this.handleNext} 
+            handleBack={this.handleBack} 
           />
         );
     }
@@ -97,7 +98,7 @@ class Checkout extends Component {
           ) : (
             <div className={classes.flexContainer}>
               <div className={classes.mainFormContainer}>
-                {this.renderStepContent(activeStep, this.handleNext, this.handleBack)}
+                {this.renderStepContent()}
               </div>
               <div>
                 <Button

@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
+import CountryOptions from './CountryOptions';
 
 const Form = props => {
   const { 
@@ -29,10 +30,7 @@ const Form = props => {
                     value={value}
                     onChange={({target: {value}}) => handleChange(key, value)}
                   >
-                    <option value="" />
-                    <option value={'lorem'}>lorem</option>
-                    <option value={'ipsum'}>ipsum</option>
-                    <option value={'foo'}>foo</option>
+                    <CountryOptions />
                   </Select>
                 </FormControl>
               );
