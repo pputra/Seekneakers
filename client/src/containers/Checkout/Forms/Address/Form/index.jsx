@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
@@ -11,10 +10,7 @@ const Form = props => {
   const { 
     classes, 
     handleChange, 
-    handleNext, 
-    handleBack, 
     inputs, 
-    activeStep,
     selectedCountry, 
   } = props;
     
@@ -66,20 +62,6 @@ const Form = props => {
             );
         })}
         </FormControl>
-        <Button
-          disabled={activeStep === 0}
-          onClick={handleBack}
-          className={classes.backButton}
-        >
-          Back
-        </Button>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={handleNext}
-        >
-          Next
-        </Button>
       </Fragment>
   );
 }

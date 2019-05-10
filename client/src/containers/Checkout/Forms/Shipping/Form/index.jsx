@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 
 import ShippingCard from '../../../../../components/Cards/Shipping';
 import {
-  Button,
   FormControl,
   FormControlLabel,
   Radio,
@@ -13,10 +12,7 @@ const Form = props => {
   const { 
     classes,
     handleChange,
-    handleNext,
-    handleBack,
     inputs,
-    activeStep,
     chooosenRateIndex,
   } = props;
     
@@ -61,20 +57,6 @@ const Form = props => {
           })}
         </RadioGroup>
         </FormControl>
-        <Button
-          disabled={activeStep === 0}
-          onClick={handleBack}
-          className={classes.backButton}
-        >
-          Back
-        </Button>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={handleNext}
-        >
-          Next
-        </Button>
       </Fragment>
   );
 }

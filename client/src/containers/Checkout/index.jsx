@@ -1,24 +1,68 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-import { setActiveStep } from '../../store/actions/checkout';
+import { setActiveStep,submitShippingAddress, handleCheckoutForm } from '../../store/actions/checkout';
 
 import styles from './styles';
 import AddressForm from './Forms/Address';
 import ShippingForm from './Forms/Shipping';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import { Grid } from '@material-ui/core';
+
+import { 
+  Grid, 
+  withStyles, 
+  Stepper, 
+  Step, 
+  StepLabel, 
+  Button, 
+  Typography,
+} from '@material-ui/core';
 
 class Checkout extends Component {
+  onSubmitAddress = () => {
+    const { 
+      submitShippingAddress, 
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      phone,
+      email,
+    } = this.props;
+
+    const data = { 
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      phone,
+      email,
+    };
+
+    submitShippingAddress(data);
+  }
+
   handleNext = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep + 1,
-    }));
+    const { 
+      activeStep,
+      setActiveStep
+    } =this.props
+    
+    switch (activeStep) {
+      case 0:
+        this.onSubmitAddress();
+        break;
+      case 1:
+        setActiveStep(activeStep + 1);
+        break;
+      case 2:
+        break;
+      default:
+        return;
+    }
   };
 
   handleBack = () => {
@@ -35,15 +79,44 @@ class Checkout extends Component {
   };
 
   renderStepContent = () => {
-    const { activeStep } = this.props;
+    const {
+      handleCheckoutForm, 
+      activeStep,
+
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      phone,
+      email,
+
+      availableRates,
+      chooosenRateIndex
+     } = this.props;
     switch (activeStep) {
       case 0:
         return (
-          <AddressForm />
+          <AddressForm 
+            handleCheckoutForm={handleCheckoutForm}
+            name={name}
+            street={street}
+            city={city}
+            state={state}
+            zip={zip}
+            country={country}
+            phone={phone}
+            email={email}
+          />
         ); 
       case 1:
         return (
-          <ShippingForm />
+          <ShippingForm 
+            availableRates={availableRates} 
+            chooosenRateIndex={chooosenRateIndex}
+            handleCheckoutForm={handleCheckoutForm}
+          />
         ); 
       case 2:
         return ( 
@@ -53,7 +126,17 @@ class Checkout extends Component {
         );
       default:
         return (
-          <AddressForm />
+          <AddressForm 
+            handleCheckoutForm={handleCheckoutForm}
+            name={name}
+            street={street}
+            city={city}
+            state={state}
+            zip={zip}
+            country={country}
+            phone={phone}
+            email={email}
+          />
         );
     }
   }
@@ -98,7 +181,8 @@ class Checkout extends Component {
                 <Button 
                   variant="contained" 
                   color="primary" 
-                  onClick={() => setActiveStep(activeStep + 1)}
+                  //onClick={() => setActiveStep(activeStep + 1)}
+                  onClick={() => this.handleNext()}
                 >
                   {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                 </Button>
@@ -113,10 +197,24 @@ class Checkout extends Component {
 
 const mapStateToProps = state => ({
   activeStep: state.checkoutReducer.activeStep,
+  //address states
+  name: state.checkoutReducer.name,
+  street: state.checkoutReducer.street,
+  city: state.checkoutReducer.city,
+  state: state.checkoutReducer.state,
+  zip: state.checkoutReducer.zip,
+  country: state.checkoutReducer.country,
+  phone: state.checkoutReducer.phone,
+  email: state.checkoutReducer.email,
+  //shipping states
+  availableRates:  state.checkoutReducer.availableRates,
+  chooosenRateIndex: state.checkoutReducer.chooosenRateIndex,
 });
 
 const mapDispatchToProps = dispatch => ({
   setActiveStep: (currStep) => dispatch(setActiveStep(currStep)),
+  submitShippingAddress: (data) => dispatch(submitShippingAddress(data)),
+  handleCheckoutForm: (key, value) => dispatch(handleCheckoutForm(key, value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout));
