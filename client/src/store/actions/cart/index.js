@@ -64,3 +64,29 @@ export const addProductToCartById = (productId, history) => {
     }
   }
 }
+
+export const modifyProductQuantityById = (productId, newQuantity) => {
+  return async dispatch => {
+    const token = localStorage.getItem('token');
+
+    try {
+      await axios({
+        method: 'PATCH',
+        url: `${DEFAULT_URI}/cart/${productId}`,
+        data: {
+          newQuantity
+        },
+        headers: {
+          token
+        }
+      });
+
+      fetchCart()(dispatch);
+    } catch (err) {
+      dispatch({
+        type: actionTypes.FETCH_CART_FAILED,
+        errMessage: err.message
+      });
+    }
+  }
+}

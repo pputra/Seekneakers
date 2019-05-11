@@ -143,9 +143,14 @@ class Navbar extends Component {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
-                <Badge badgeContent={this.props.cartTotalQuantity} color="secondary">
-                  <CartIcon />
-                </Badge>
+                <Link to="/cart" style={{ textDecoration: 'none', color:'black' }}>
+                  <Badge 
+                    badgeContent={this.props.cartTotalQuantity} 
+                    color="secondary"
+                  >
+                    <CartIcon />
+                  </Badge>
+                </Link>
               </IconButton>
               <IconButton
                 aria-owns={isMenuOpen ? 'material-appbar' : undefined}

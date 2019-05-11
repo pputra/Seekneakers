@@ -10,6 +10,7 @@ import Dashboard from './containers/Dashboard';
 import Login from './containers/Auth/Login';
 import Register from './containers/Auth/Register';
 import Checkout from './containers/Checkout';
+import Cart from './containers/Cart';
 
 class App extends Component {
   render() {
@@ -22,6 +23,7 @@ class App extends Component {
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
               <Route path="/checkout" component={Checkout} />
+              <Route path="/cart" component={Cart} />
             </Switch>
           </Layout>
         </Router>
