@@ -169,8 +169,8 @@ module.exports = {
     
     await cart.save();
 
-    const productIndex = products.findIndex(product => (product.product_id == id));
-
+    const productIndex = products.findIndex(product => (product.product_id._id == id));
+    
     if (productIndex === -1) {
       return res.status(400).json({message: 'unable to locate the product'});
     }

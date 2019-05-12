@@ -5,22 +5,46 @@ import { modifyProductQuantityById } from '../../store/actions/cart';
 
 import CartTable from '../../components/Tables/Cart';
 import styles from './styles';
-import { withStyles } from '@material-ui/core';
+import { 
+  withStyles, 
+  Button, 
+} from '@material-ui/core';
 
 class Cart extends Component {
   render() {
     const { 
+      history,
       classes, 
       products, 
-      totalPrice
+      totalPrice,
+      modifyProductQuantityById,
     } = this.props;
+
+    const hasProduct = products.length !== 0;
+
+    if (hasProduct) {
+      return (
+        <div className={classes.flexContainer}>
+          <CartTable
+            products={products}
+            totalPrice={totalPrice}
+            modifyProductQuantityById={modifyProductQuantityById}
+          />
+          <div className={classes.checkoutBtn}>
+            <Button
+              variant="outlined"
+              onClick={() => history.push('/checkout')}
+            >
+              <h3>Checkout</h3>
+            </Button>
+          </div>
+        </div>
+      );
+    }
     
     return (
       <div className={classes.flexContainer}>
-        <CartTable
-          products={products}
-          totalPrice={totalPrice}
-        />
+        <h3>Your cart is empty</h3>
       </div>
     );
   }

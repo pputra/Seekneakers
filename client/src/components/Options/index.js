@@ -311,3 +311,11 @@ export const USStateOptions = () => (
     <option value="WY">Wyoming</option>
   </Fragment>
 );
+
+export const QuantityOptions = ({numStock}) => (
+  <Fragment>
+    {[...Array(Math.min(numStock, 10) + 1)].map((x, i) =>
+      <option>{i}</option>
+    )}
+  </Fragment>
+);

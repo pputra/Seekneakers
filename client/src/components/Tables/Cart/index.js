@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { QuantityOptions } from '../../Options';
 import styles from './styles';
 import {
   withStyles,
@@ -9,6 +10,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Select,
+  FormControl
 } from '@material-ui/core';
 
 const CustomTableCell = withStyles(theme => ({
@@ -25,7 +28,8 @@ const CartTable = props => {
   const { 
     classes, 
     products, 
-    totalPrice
+    totalPrice,
+    modifyProductQuantityById,
   } = props;
 
   return (
@@ -56,7 +60,16 @@ const CartTable = props => {
                 </div>
               </CustomTableCell>
               <CustomTableCell align="right">
-                {product.quantity}
+                <FormControl>
+                  <Select
+                    native
+                    defaultValue={product.quantity}
+                    onChange={({target: {value}}) => 
+                      modifyProductQuantityById(product.product_id._id, value)}
+                  >
+                    <QuantityOptions numStock={product.product_id.stock} />
+                  </Select>
+                </FormControl>
               </CustomTableCell>
               <CustomTableCell align="right">
                 {product.price}

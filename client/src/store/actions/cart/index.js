@@ -68,6 +68,28 @@ export const addProductToCartById = (productId, history) => {
 export const modifyProductQuantityById = (productId, newQuantity) => {
   return async dispatch => {
     const token = localStorage.getItem('token');
+    const removeFromCart = newQuantity === '0';
+    
+    if (removeFromCart) {
+      try {
+        await axios({
+          method: 'DELETE',
+          url: `${DEFAULT_URI}/cart/${productId}`,
+          headers: {
+            token
+          }
+        });
+
+        fetchCart()(dispatch);
+      } catch (err) {
+        alert(err);
+        dispatch({
+          type: actionTypes.FETCH_CART_FAILED,
+          errMessage: err.message
+        });
+      }
+      return;
+    }
 
     try {
       await axios({
@@ -83,6 +105,7 @@ export const modifyProductQuantityById = (productId, newQuantity) => {
 
       fetchCart()(dispatch);
     } catch (err) {
+      alert(err);
       dispatch({
         type: actionTypes.FETCH_CART_FAILED,
         errMessage: err.message
