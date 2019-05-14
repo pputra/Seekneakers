@@ -1,10 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
 import { CountryOptions, USStateOptions } from '../../../../../components/Options';
+import { 
+  TextField,
+  InputLabel,
+  Select,
+  FormControl,
+} from '@material-ui/core';
 
 const Form = props => {
   const { 
@@ -15,8 +17,8 @@ const Form = props => {
   } = props;
     
   return (
-    <Fragment>
-        <FormControl className={classes.container}>
+    <div className={classes.flexContainer}>
+      <FormControl className={classes.container}>
           {inputs.map(({value, key, type, label}) => {
             if (key === 'country') {
               return (
@@ -61,8 +63,8 @@ const Form = props => {
              />
             );
         })}
-        </FormControl>
-      </Fragment>
+      </FormControl>
+    </div>
   );
 }
 

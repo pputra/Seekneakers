@@ -14,14 +14,12 @@ class ShippingForm extends Component {
     } = this.props;
    
     return (
-      <div>
-        <Form 
-          classes={classes}
-          inputs={availableRates}
-          chooosenRateIndex={chooosenRateIndex}
-          handleChange={handleCheckoutForm}
-        />
-      </div>
+      <Form 
+        classes={classes}
+        inputs={availableRates}
+        chooosenRateIndex={chooosenRateIndex}
+        handleChange={handleCheckoutForm}
+      />
     );
   }
 };

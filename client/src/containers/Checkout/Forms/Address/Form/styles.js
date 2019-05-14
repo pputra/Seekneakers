@@ -1,9 +1,11 @@
 const styles = theme => ({
+  flexContainer: {
+    display:'flex', 
+    justifyContent:'center', 
+    alignItems:'center',
+  },
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItem: 'center',
-    width: '100%'
+    width: '40%',
   },
   backButton: {
     marginRight: theme.spacing.unit,

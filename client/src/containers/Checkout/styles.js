@@ -12,7 +12,7 @@ const styles = theme => ({
   mainFormContainer: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
-    width: '30%'
+    width: '100%',
   },
   backButton: {
     marginRight: theme.spacing.unit,

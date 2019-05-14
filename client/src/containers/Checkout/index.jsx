@@ -6,6 +6,7 @@ import { setActiveStep,submitShippingAddress, handleCheckoutForm } from '../../s
 import styles from './styles';
 import AddressForm from './Forms/Address';
 import ShippingForm from './Forms/Shipping';
+import ReviewForm from './Forms/Review';
 
 import { 
   Grid, 
@@ -120,9 +121,7 @@ class Checkout extends Component {
         ); 
       case 2:
         return ( 
-          <div>
-            TODO confirmation page here
-          </div>
+          <ReviewForm />
         );
       default:
         return (
