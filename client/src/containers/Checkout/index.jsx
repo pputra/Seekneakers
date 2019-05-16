@@ -96,7 +96,7 @@ class Checkout extends Component {
       availableRates,
       chooosenRateIndex
      } = this.props;
-    switch (activeStep) {
+    switch (2) {
       case 0:
         return (
           <AddressForm 
@@ -121,7 +121,18 @@ class Checkout extends Component {
         ); 
       case 2:
         return ( 
-          <ReviewForm />
+          <ReviewForm 
+            name={name}
+            street={street}
+            city={city}
+            state={state}
+            zip={zip}
+            country={country}
+            phone={phone}
+            email={email}
+            availableRates={availableRates} 
+            chooosenRateIndex={chooosenRateIndex}
+          />
         );
       default:
         return (

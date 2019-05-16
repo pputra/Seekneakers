@@ -30,6 +30,7 @@ const CartTable = props => {
     products, 
     totalPrice,
     modifyProductQuantityById,
+    shippingPrice,
   } = props;
 
   return (
@@ -79,6 +80,18 @@ const CartTable = props => {
               </CustomTableCell>
             </TableRow>
           ))}
+          {!!shippingPrice && 
+            <TableRow className={classes.row}>
+              <CustomTableCell component="th" scope="row">
+                <h5>Shipping</h5>
+              </CustomTableCell>
+              <CustomTableCell align="right" />
+              <CustomTableCell align="right" />
+              <CustomTableCell align="right">
+                {shippingPrice}
+              </CustomTableCell>
+            </TableRow>
+          }
           <TableRow className={classes.row}>
             <CustomTableCell component="th" scope="row">
               <h3>Sub Total</h3>
@@ -86,7 +99,12 @@ const CartTable = props => {
             <CustomTableCell align="right" />
             <CustomTableCell align="right" />
             <CustomTableCell align="right">
-              <h3>${totalPrice}</h3>
+              <h3>
+                $
+                {!shippingPrice ? 
+                  totalPrice : totalPrice + shippingPrice
+                }
+              </h3>
             </CustomTableCell>
           </TableRow>
         </TableBody>

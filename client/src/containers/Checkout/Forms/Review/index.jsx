@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom'
 
 import Cart from '../../../Cart';
 import styles from './styles';
@@ -8,7 +8,21 @@ import { withStyles } from '@material-ui/core';
 
 class Review extends Component {
   render() {
-    const { classes } = this.props
+    const { 
+      classes,
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      phone,
+      email,
+      availableRates,
+      chooosenRateIndex,
+    } = this.props;
+    
+    const shippingPrice = 30;
     return (
       <Fragment>
         <div className={classes.flexContainer}>
@@ -16,10 +30,13 @@ class Review extends Component {
             <h1>review contents</h1>
           </div>
         </div>
-        <Cart />
+        <Cart 
+          location={this.props.location} 
+          shippingPrice={shippingPrice}
+        />
       </Fragment>
     );
   }
 }
 
-export default connect(null, null)(withStyles(styles)(Review));
+export default  withRouter(withStyles(styles)(Review));

@@ -13,11 +13,13 @@ import {
 class Cart extends Component {
   render() {
     const { 
+      location: { pathname },
       history,
       classes, 
       products, 
       totalPrice,
       modifyProductQuantityById,
+      shippingPrice,
     } = this.props;
 
     const hasProduct = products.length !== 0;
@@ -29,15 +31,19 @@ class Cart extends Component {
             products={products}
             totalPrice={totalPrice}
             modifyProductQuantityById={modifyProductQuantityById}
+            shippingPrice={shippingPrice}
           />
-          <div className={classes.checkoutBtn}>
-            <Button
-              variant="outlined"
-              onClick={() => history.push('/checkout')}
-            >
-              <h3>Checkout</h3>
-            </Button>
-          </div>
+
+          {pathname === '/cart' &&
+            <div className={classes.checkoutBtn}>
+              <Button
+                variant="outlined"
+                onClick={() => history.push('/checkout')}
+              >
+                <h3>Checkout</h3>
+              </Button>
+            </div>
+          }
         </div>
       );
     }
