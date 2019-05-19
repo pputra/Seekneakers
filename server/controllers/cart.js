@@ -71,6 +71,10 @@ module.exports = {
 
       cart.total_price += newProductPrice;
     } else {
+      if (products[productIndex].product_id.stock <= products[productIndex].quantity) {
+        return res.status(400).json({message: 'unable to exceed stock capacity'});
+      }
+      
       products[productIndex].quantity++;
 
       cart.total_price += products[productIndex].price;
