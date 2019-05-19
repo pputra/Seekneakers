@@ -70,3 +70,60 @@ export const submitShippingAddress = data => {
     }
   }
 }
+
+export const submitOrder = data => {
+  return async dispatch => {
+    dispatch({
+      type: actionTypes.SUBMIT_ORDER_LOADING,
+    });
+
+    const {
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      provider,
+      service_name,
+      price,
+    } = data;
+
+    try {
+      await axios({
+        method: 'POST',
+        url: `${DEFAULT_URI}/order`,
+        headers: {
+          token: localStorage.getItem('token'),
+        },
+        data: {
+          name,
+          street,
+          city,
+          state,
+          zip,
+          country,
+          provider,
+          service_name,
+          price,
+        },
+      });
+
+      dispatch({
+        type: actionTypes.SUBMIT_ORDER_SUCCEED
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.SUBMIT_ORDER_FAILED,
+      });
+    }
+  }
+}
+
+export const leaveCheckoutPage = () => {
+  return dispatch =>  {
+    dispatch({
+      type: actionTypes.LEAVE_CHECKOUT_PAGE
+    });
+  }
+}

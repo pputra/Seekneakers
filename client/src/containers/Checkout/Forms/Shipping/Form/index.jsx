@@ -13,7 +13,7 @@ const Form = props => {
     classes,
     handleChange,
     inputs,
-    chooosenRateIndex,
+    chosenRateIndex,
   } = props;
     
   return (
@@ -22,8 +22,8 @@ const Form = props => {
         aria-label="shipping"
         name="shipping"
         className={classes.group}
-        value={chooosenRateIndex}
-        onChange={({target: {value}}) => handleChange('chooosenRateIndex', Number(value))}
+        value={chosenRateIndex}
+        onChange={({target: {value}}) => handleChange('chosenRateIndex', Number(value))}
       >
         {inputs.map((input, i) => {
           const { 
@@ -39,7 +39,7 @@ const Form = props => {
             <FormControlLabel 
               className={classes.radioOption}
               value={i} 
-              control={<Radio checked={chooosenRateIndex === i}/>} 
+              control={<Radio checked={chosenRateIndex === i}/>} 
               label={
                 <ShippingCard
                   provider={provider}

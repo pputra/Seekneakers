@@ -9,7 +9,7 @@ class ShippingForm extends Component {
     const { 
       classes,
       availableRates, 
-      chooosenRateIndex, 
+      chosenRateIndex, 
       handleCheckoutForm, 
     } = this.props;
    
@@ -17,7 +17,7 @@ class ShippingForm extends Component {
       <Form 
         classes={classes}
         inputs={availableRates}
-        chooosenRateIndex={chooosenRateIndex}
+        chosenRateIndex={chosenRateIndex}
         handleChange={handleCheckoutForm}
       />
     );

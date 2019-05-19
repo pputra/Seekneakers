@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-import { setActiveStep,submitShippingAddress, handleCheckoutForm } from '../../store/actions/checkout';
+import { 
+  setActiveStep, 
+  submitShippingAddress, 
+  handleCheckoutForm,
+  submitOrder,
+  leaveCheckoutPage,
+ } from '../../store/actions/checkout';
+ import { modifyProductQuantityById } from '../../store/actions/cart';
 
 import styles from './styles';
 import AddressForm from './Forms/Address';
@@ -46,11 +53,40 @@ class Checkout extends Component {
     submitShippingAddress(data);
   }
 
+  onSubmitOrder = () => {
+    const {
+      submitOrder,
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      availableRates,
+      chosenRateIndex,
+    } = this.props;
+
+    const data = {
+      submitOrder,
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      provider: availableRates[chosenRateIndex].provider,
+      service_name: availableRates[chosenRateIndex].name,
+      price : availableRates[chosenRateIndex].price,
+    };
+
+    submitOrder(data);
+  }
+
   handleNext = () => {
     const { 
       activeStep,
-      setActiveStep
-    } =this.props
+      setActiveStep,
+    } =this.props;
     
     switch (activeStep) {
       case 0:
@@ -60,6 +96,7 @@ class Checkout extends Component {
         setActiveStep(activeStep + 1);
         break;
       case 2:
+        this.onSubmitOrder();
         break;
       default:
         return;
@@ -67,17 +104,25 @@ class Checkout extends Component {
   };
 
   handleBack = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1,
-    }));
+    const { 
+      activeStep,
+      setActiveStep,
+    } =this.props;
+
+    setActiveStep(activeStep - 1);
   };
 
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
-    this.props.history.push('/');
-  };
+  hasEmptyCart = () => {
+    const { 
+      products,
+      history,
+    } = this.props;
+    const hasEmptyCart = products.length === 0;
+
+    if (hasEmptyCart) {
+      history.push('/');
+    }
+  }
 
   renderStepContent = () => {
     const {
@@ -94,9 +139,14 @@ class Checkout extends Component {
       email,
 
       availableRates,
-      chooosenRateIndex
+      chosenRateIndex,
+
+      products,
+      totalPrice,
+      modifyProductQuantityById,
      } = this.props;
-    switch (2) {
+     
+    switch (activeStep) {
       case 0:
         return (
           <AddressForm 
@@ -115,7 +165,7 @@ class Checkout extends Component {
         return (
           <ShippingForm 
             availableRates={availableRates} 
-            chooosenRateIndex={chooosenRateIndex}
+            chosenRateIndex={chosenRateIndex}
             handleCheckoutForm={handleCheckoutForm}
           />
         ); 
@@ -131,7 +181,10 @@ class Checkout extends Component {
             phone={phone}
             email={email}
             availableRates={availableRates} 
-            chooosenRateIndex={chooosenRateIndex}
+            chosenRateIndex={chosenRateIndex}
+            products={products}
+            totalPrice={totalPrice}
+            modifyProductQuantityById={modifyProductQuantityById}
           />
         );
       default:
@@ -151,13 +204,30 @@ class Checkout extends Component {
     }
   }
 
+  componentDidMount() {
+    this.hasEmptyCart();
+  }
+
+  componentDidUpdate() {
+    this.hasEmptyCart();
+  }
+
+  componentWillUnmount() {
+    const { leaveCheckoutPage } = this.props;
+    leaveCheckoutPage();
+  }
+
   render() {
-    const { classes, activeStep, setActiveStep } = this.props;
+    const { 
+      classes, 
+      activeStep, 
+      history,
+    } = this.props;
 
     const steps = [
       'Select Address', 
-      'Select shipping method', 
-      'Order confirmation',
+      'Select Shipping Method', 
+      'Review Order',
     ];
 
     return (
@@ -171,9 +241,14 @@ class Checkout extends Component {
         </Stepper>
         <Grid container spacing={12} justify={'center'}>
           {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>Your order has been placed</Typography>
-              <Button onClick={this.handleReset}>Back to home</Button>
+            <div className={classes.flexContainer}>
+              <Typography>Your order has been placed</Typography>
+              <Button 
+                variant="outlined" 
+                onClick={() => history.push('/')}
+              >
+                Back to home
+              </Button>
             </div>
           ) : (
             <div className={classes.flexContainer}>
@@ -183,18 +258,17 @@ class Checkout extends Component {
               <div>
                 <Button
                   disabled={activeStep === 0}
-                  onClick={() => setActiveStep(activeStep - 1)}
+                  onClick={this.handleBack}
                   className={classes.backButton}
                 >
                   Back
                 </Button>
                 <Button 
                   variant="contained" 
-                  color="primary" 
-                  //onClick={() => setActiveStep(activeStep + 1)}
-                  onClick={() => this.handleNext()}
+                  color="primary"
+                  onClick={this.handleNext}
                 >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                  {activeStep === steps.length - 1 ? 'Place Order' : 'Next'}
                 </Button>
               </div>
             </div>
@@ -218,13 +292,20 @@ const mapStateToProps = state => ({
   email: state.checkoutReducer.email,
   //shipping states
   availableRates:  state.checkoutReducer.availableRates,
-  chooosenRateIndex: state.checkoutReducer.chooosenRateIndex,
+  chosenRateIndex: state.checkoutReducer.chosenRateIndex,
+  //cart states
+  products: state.cartReducer.products,
+  totalPrice: state.cartReducer.totalPrice,
 });
 
 const mapDispatchToProps = dispatch => ({
   setActiveStep: (currStep) => dispatch(setActiveStep(currStep)),
   submitShippingAddress: (data) => dispatch(submitShippingAddress(data)),
   handleCheckoutForm: (key, value) => dispatch(handleCheckoutForm(key, value)),
+  submitOrder: (data) => dispatch(submitOrder(data)),
+  leaveCheckoutPage: () => dispatch(leaveCheckoutPage()),
+  modifyProductQuantityById: (productId, newQuantity) => 
+    dispatch(modifyProductQuantityById(productId, newQuantity)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout));
