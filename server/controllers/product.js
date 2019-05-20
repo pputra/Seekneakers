@@ -81,5 +81,16 @@ module.exports = {
     }).catch((err) => {
       res.status(400).json({message: err.message});
     });
+  },
+  restockById: (req, res) => {
+    const { id } = req.params;
+
+    Product.updateOne({_id: id}, {
+      stock: 20,
+    }).then((result) => {
+      res.status(200).json({message: `product with id: ${id} has been restocked`, data: result});
+    }).catch((err) => {
+      res.status(400).json({message: err.message});
+    });
   }
 };

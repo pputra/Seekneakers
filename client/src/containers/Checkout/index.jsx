@@ -7,9 +7,8 @@ import {
   handleCheckoutForm,
   submitOrder,
   leaveCheckoutPage,
- } from '../../store/actions/checkout';
- import { modifyProductQuantityById } from '../../store/actions/cart';
-
+} from '../../store/actions/checkout';
+import { modifyProductQuantityById } from '../../store/actions/cart';
 import styles from './styles';
 import AddressForm from './Forms/Address';
 import ShippingForm from './Forms/Shipping';
