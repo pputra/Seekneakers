@@ -4,7 +4,11 @@ import ProductCard from '../../../components/Cards/Product';
 import Grid from '@material-ui/core/Grid';
 
 const Productlist = props => {
-  const { history, products, handleAddProductToCart } = props;
+  const { 
+    products, 
+    handleAddProductToCart,
+    handleRestockProduct, 
+  } = props;
   
   return (
     <Grid container spacing={40}>
@@ -15,7 +19,9 @@ const Productlist = props => {
             brand={product.category_id.name}
             name={product.name}
             price={product.price}
-            fn={() => handleAddProductToCart(product._id, history)}
+            stock={product.stock}
+            addProductToCart={() => handleAddProductToCart(product._id)}
+            restockProduct={() => handleRestockProduct(product._id)}
           />
         </Grid>
       ))}

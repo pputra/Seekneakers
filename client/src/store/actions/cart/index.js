@@ -1,3 +1,4 @@
+import history from '../../../history';
 import axios from 'axios';
 import { DEFAULT_URI } from '../../../config';
 import * as actionTypes from '../actionTypes';
@@ -34,7 +35,7 @@ export const fetchCart = () => {
   }
 };
 
-export const addProductToCartById = (productId, history) => {
+export const addProductToCartById = (productId) => {
   return async dispatch => {
     const token = localStorage.getItem('token');
 

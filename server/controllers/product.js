@@ -86,7 +86,7 @@ module.exports = {
     const { id } = req.params;
 
     Product.updateOne({_id: id}, {
-      stock: 20,
+      stock: 10,
     }).then((result) => {
       res.status(200).json({message: `product with id: ${id} has been restocked`, data: result});
     }).catch((err) => {

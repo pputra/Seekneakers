@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react';
 
 import { connect } from 'react-redux';
-import { fetchProducts } from '../../store/actions/product';
+import { 
+  fetchProducts,
+  restockProductById,
+} from '../../store/actions/product';
 import { addProductToCartById } from '../../store/actions/cart';
 
 import ProductList from './ProductList';
-
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import classNames from 'classnames';
@@ -35,7 +37,13 @@ class Dashboard extends Component {
 
   render() {
     const { anchorEl } = this.state;
-    const { classes, history, products, onProductAddedToCartById } = this.props;
+    const { 
+      classes, 
+      history, 
+      products, 
+      onProductAddedToCartById, 
+      onRestockProductById,
+    } = this.props;
 
     return (
       <Fragment>
@@ -79,6 +87,7 @@ class Dashboard extends Component {
             history={history}
             products={products} 
             handleAddProductToCart={onProductAddedToCartById}
+            handleRestockProduct={onRestockProductById}
           />
         </div>
       </Fragment>
@@ -93,6 +102,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onFetchProducts: () => dispatch(fetchProducts()),
   onProductAddedToCartById: (productId, history) => dispatch(addProductToCartById(productId, history)),
+  onRestockProductById: (productId) => dispatch(restockProductById(productId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Dashboard));
