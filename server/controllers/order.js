@@ -2,6 +2,7 @@ const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const User = require('../models/User');
 const Product = require('../models/Product');
+const { getShippingRates } = require('../helpers/shipping');
 
 module.exports = {
   getAll: (req, res) => {
@@ -24,9 +25,7 @@ module.exports = {
       state,
       zip,
       country,
-      provider,
-      service_name,
-      price
+      shippingIndex
     } = req.body;
 
     try {
@@ -96,13 +95,13 @@ module.exports = {
       return res.status(400).json({message: 'Products are out of stock'});
     }
 
-    cart.products = [];
+    const availableRates = await getShippingRates(req);
 
-    try {
-      await cart.save();
-    } catch (err) {
-      res.status(400).json({message: err.message});
+    if (!availableRates || availableRates.length === 0) {
+      return res.status(500).json({message: 'Unable to verify shipping options'});
     }
+
+    const chosenRate = availableRates[shippingIndex];
     
     try {
       const addedOrder = await Order.create({
@@ -119,11 +118,11 @@ module.exports = {
         },
         products:orderedProducts,
         courier: {
-          provider,
-          service_name,
-          price,
+          provider: chosenRate.provider,
+          service_name: chosenRate.name,
+          price: chosenRate.price,
         },
-        total_price: totalPrice + price
+        total_price: totalPrice + chosenRate.price
       });
 
       await User.updateOne({_id: userId}, {
@@ -131,6 +130,10 @@ module.exports = {
           orders: addedOrder._id,
         }
       });
+
+      cart.products = [];
+
+      await cart.save();
 
       res.status(200).json({
         message: 'Your order has been placed',

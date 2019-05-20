@@ -62,7 +62,8 @@ class Checkout extends Component {
       state,
       zip,
       country,
-      availableRates,
+      phone,
+      email,
       chosenRateIndex,
     } = this.props;
 
@@ -74,9 +75,9 @@ class Checkout extends Component {
       state,
       zip,
       country,
-      provider: availableRates[chosenRateIndex].provider,
-      service_name: availableRates[chosenRateIndex].name,
-      price : availableRates[chosenRateIndex].price,
+      phone,
+      email,
+      shippingIndex: chosenRateIndex,
     };
 
     submitOrder(data);
@@ -116,10 +117,12 @@ class Checkout extends Component {
     const { 
       products,
       history,
+      activeStep,
     } = this.props;
     const hasEmptyCart = products.length === 0;
+    const onConfirmationPage = activeStep === 3;
 
-    if (hasEmptyCart) {
+    if (hasEmptyCart && !onConfirmationPage) {
       history.push('/');
     }
   }

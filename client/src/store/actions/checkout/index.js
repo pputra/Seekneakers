@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { DEFAULT_URI } from '../../../config';
 import * as actionTypes from '../actionTypes';
+import { fetchCart } from '../cart';
 
 export const setActiveStep = currStep => {
   return dispatch => {
@@ -84,9 +85,9 @@ export const submitOrder = data => {
       state,
       zip,
       country,
-      provider,
-      service_name,
-      price,
+      phone,
+      email,
+      shippingIndex,
     } = data;
 
     try {
@@ -103,15 +104,17 @@ export const submitOrder = data => {
           state,
           zip,
           country,
-          provider,
-          service_name,
-          price,
+          phone,
+          email,
+          shippingIndex,
         },
       });
 
       dispatch({
         type: actionTypes.SUBMIT_ORDER_SUCCEED
       });
+
+      fetchCart()(dispatch);
     } catch (err) {
       dispatch({
         type: actionTypes.SUBMIT_ORDER_FAILED,

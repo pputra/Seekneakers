@@ -64,9 +64,14 @@ module.exports = {
       try {
         const productToAdd = await Product.findOne({_id: id});
         newProductPrice = productToAdd.price;
+        newProductStock = productToAdd.stock;
       } catch (err) {
         res.status(400).json({message: err.message});
       }
+      if (newProductStock <= 0) {
+        return res.status(400).json({message: 'product is out of stock'});
+      }
+      
       cart.products.push({product_id: id, quantity: 1, price: newProductPrice});
 
       cart.total_price += newProductPrice;
