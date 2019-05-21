@@ -6,6 +6,7 @@ import userLoginReducer from './reducers/user/login';
 import userRegisterReducer from './reducers/user/register';
 import cartReducer from './reducers/cart';
 import checkoutReducer from './reducers/checkout';
+import ordersReducer from './reducers/order';
 
 const combinedReducers = combineReducers({
   productsReducer,
@@ -13,6 +14,7 @@ const combinedReducers = combineReducers({
   userRegisterReducer,
   cartReducer,
   checkoutReducer,
+  ordersReducer,
 });
 
 const store = createStore(combinedReducers, applyMiddleware(thunk));
