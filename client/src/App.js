@@ -11,6 +11,7 @@ import Login from './containers/Auth/Login';
 import Register from './containers/Auth/Register';
 import Checkout from './containers/Checkout';
 import Cart from './containers/Cart';
+import OrderHistory from './containers/OrderHistory';
 
 class App extends Component {
   render() {
@@ -24,6 +25,7 @@ class App extends Component {
               <Route path="/register" component={Register} />
               <Route path="/checkout" component={Checkout} />
               <Route path="/cart" component={Cart} />
+              <Route path="/order" component={OrderHistory} />
             </Switch>
           </Layout>
         </Router>

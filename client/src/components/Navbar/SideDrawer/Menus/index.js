@@ -39,7 +39,10 @@ const Menus = props => {
           </ListItem>
           <Divider/>
           <ListItem button>
-            <ListItemText primary={'Order History'}/>
+            <ListItemText 
+              primary={'Order History'} 
+              onClick={() => history.push('/order')}
+            />
           </ListItem>
           <Divider/>
           <ListItem button>

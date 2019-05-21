@@ -7,7 +7,8 @@ import CartTable from '../../components/Tables/Cart';
 import styles from './styles';
 import { 
   withStyles, 
-  Button, 
+  Button,
+  Typography, 
 } from '@material-ui/core';
 
 class Cart extends Component {
@@ -46,7 +47,9 @@ class Cart extends Component {
     
     return (
       <div className={classes.flexContainer}>
-        <h3>Your cart is empty</h3>
+        <Typography variant="h6">
+          Your cart is empty
+        </Typography>
       </div>
     );
   }
