@@ -8,7 +8,16 @@ module.exports = {
   getAll: (req, res) => {
     const { userId } = req.decoded;
     
-    User.findOne({_id: userId}).populate('orders').then((user) => {
+    User.findOne({_id: userId}).populate({
+      path:'orders',
+      model:"Order",
+      populate:[{
+          path:"products",
+     },
+     {
+          path: "products.product_id",
+          model:"Product",
+     }]}).then((user) => {
       const orders = user.orders;
       res.status(200).json({message: 'Orders have been fetched successfully', orders});
     }).catch((err) => {
