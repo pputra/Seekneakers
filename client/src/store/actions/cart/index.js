@@ -59,8 +59,8 @@ export const addProductToCartById = (productId) => {
       fetchCart()(dispatch);
     } catch (err) {
       dispatch({
-        type: actionTypes.FETCH_CART_FAILED,
-        errMessage: err.message
+        type: actionTypes.FETCH_PRODUCT_DETAIL_FAILED,
+        errMessage: err.message,
       });
     }
   }

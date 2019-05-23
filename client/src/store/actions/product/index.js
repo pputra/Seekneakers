@@ -29,7 +29,34 @@ export const fetchProducts = () => {
   };
 };
 
-export const restockProductById = (productId) => {
+export const fetchProductDetailByid = productId => {
+  return async dispatch => {
+    dispatch({
+      type: actionTypes.FETCH_PRODUCT_DETAIL_LOADING,
+    });
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${DEFAULT_URI}/products/${productId}`
+      });
+
+      const { product } = response.data;
+
+      dispatch({
+        type: actionTypes.FETCH_PRODUCT_DETAIL_SUCCEED,
+        product,
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.FETCH_PRODUCT_DETAIL_FAILED,
+        errMessage: err.message,
+      });
+    }
+  }
+}
+
+export const restockProductById = productId => {
   return async dispatch => {
     const token = localStorage.getItem('token');
 
