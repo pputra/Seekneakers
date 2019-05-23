@@ -1,12 +1,10 @@
 import React from 'react';
 
 import ProductCard from '../../../components/Cards/Product';
-import styles from './styles';
-import { withStyles, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 const Productlist = props => {
   const { 
-    classes,
     products, 
     handleAddProductToCart,
     handleRestockProduct,
@@ -17,12 +15,10 @@ const Productlist = props => {
     <Grid container spacing={40}>
       {products.map(product => (
         <Grid 
-          className={classes.root}
           item key={product._id} 
           sm={6} 
           md={4} 
           lg={3} 
-          onClick={() => history.push(`product/${product._id}`)}
         >
           <ProductCard
             imageSrc={product.image_src}
@@ -32,6 +28,7 @@ const Productlist = props => {
             stock={product.stock}
             addProductToCart={() => handleAddProductToCart(product._id)}
             restockProduct={() => handleRestockProduct(product._id)}
+            showDetail={() => history.push(`product/${product._id}`)}
           />
         </Grid>
       ))}
@@ -39,4 +36,4 @@ const Productlist = props => {
   );
 };
 
-export default withStyles(styles)(Productlist);
+export default Productlist;

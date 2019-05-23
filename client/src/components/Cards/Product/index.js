@@ -21,29 +21,32 @@ const ProductCard = props => {
     addProductToCart, 
     restockProduct,
     stock,
+    showDetail,
   } = props;
   
   return (
     <Card className={classes.card}>
-      <CardMedia
-        className={classes.cardMedia}
-        image={imageSrc}
-        title={name}
-      />
-      <CardContent className={classes.cardContent}>
-        <Typography variant="h5" component="h5">
-          {brand}
-        </Typography>
-        <Typography>
-          {name}
-        </Typography>
-        <Typography>
-          ${price}
-        </Typography>
-        <Typography>
-          Stock:{stock}
-        </Typography>
-      </CardContent>
+      <div onClick={showDetail}>
+        <CardMedia
+          className={classes.cardMedia}
+          image={imageSrc}
+          title={name}
+        />
+        <CardContent className={classes.cardContent}>
+          <Typography variant="h5" component="h5">
+            {brand}
+          </Typography>
+          <Typography>
+            {name}
+          </Typography>
+          <Typography>
+            ${price}
+          </Typography>
+          <Typography>
+            Stock:{stock}
+          </Typography>
+        </CardContent>
+      </div>
       <CardActions>
         {Number(stock) === 0 ? 
           <Button variant="outlined" fullWidth={true} onClick={() => restockProduct()}>
