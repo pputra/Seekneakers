@@ -56,7 +56,7 @@ export const fetchProductDetailByid = productId => {
   }
 }
 
-export const restockProductById = productId => {
+export const restockProductById = (productId, isFromDetailPage) => {
   return async dispatch => {
     const token = localStorage.getItem('token');
 
@@ -77,7 +77,11 @@ export const restockProductById = productId => {
         },
       });
 
-      fetchProducts()(dispatch);
+      if (isFromDetailPage) {
+        fetchProductDetailByid(productId)(dispatch);
+      } else {
+        fetchProducts()(dispatch);
+      }
     } catch (err) {
       dispatch({
         type: actionTypes.ERROR

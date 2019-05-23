@@ -37,7 +37,8 @@ class ProductDetail extends Component {
       classes,
       match: {params: {productId}},
       product,
-      addProductToCartById
+      addProductToCartById,
+      restockProductById,
     } = this.props;
 
     return (
@@ -50,7 +51,7 @@ class ProductDetail extends Component {
           rating={product.rating}
           description={product.description}
           addProductToCartById={() => addProductToCartById(productId)}
-          restockProductById={() => restockProductById(productId)}
+          restockProductById={() => restockProductById(productId, true)}
         />
         <div style={{width: '40%', justifyContent:'center', alignItems:'center', display:'flex', marginTop:'1%', flexDirection:'column'}}>
           <Paper style={{width:'100%'}}>
@@ -127,7 +128,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchProductDetailByid: (productId) => dispatch((fetchProductDetailByid(productId))),
   addProductToCartById: (productId) => dispatch(addProductToCartById(productId)),
-  restockProductById: (productId) => dispatch(restockProductById(productId))
+  restockProductById: (productId, isFromDetailPage) => dispatch(restockProductById(productId, isFromDetailPage))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ProductDetail));
