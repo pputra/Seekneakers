@@ -7,7 +7,6 @@ import styles from './styles';
 import OrderList from '../../components/List/Order';
 import { withStyles, Typography } from '@material-ui/core';
 
-
 class OrderHistory extends Component {
   componentDidMount() {
     const { onFetchOrders } = this.props;

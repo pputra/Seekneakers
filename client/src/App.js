@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import history from './history';
 import store from './store';
 
-
 import Layout from './hoc/Layout';
 import Dashboard from './containers/Dashboard';
 import Login from './containers/Auth/Login';
@@ -12,6 +11,7 @@ import Register from './containers/Auth/Register';
 import Checkout from './containers/Checkout';
 import Cart from './containers/Cart';
 import OrderHistory from './containers/OrderHistory';
+import ProductDetail from './containers/ProductDetail';
 
 class App extends Component {
   render() {
@@ -26,6 +26,7 @@ class App extends Component {
               <Route path="/checkout" component={Checkout} />
               <Route path="/cart" component={Cart} />
               <Route path="/order" component={OrderHistory} />
+              <Route path="/product/:id" component={ProductDetail} />
             </Switch>
           </Layout>
         </Router>

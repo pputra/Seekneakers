@@ -18,7 +18,7 @@ module.exports = {
           path: "products.product_id",
           model:"Product",
      }]}).then((user) => {
-      const orders = user.orders;
+      const orders = user.orders.reverse();
       res.status(200).json({message: 'Orders have been fetched successfully', orders});
     }).catch((err) => {
       res.status(401).json({message: 'You are not authorized to access this content'});
@@ -131,7 +131,7 @@ module.exports = {
           service_name: chosenRate.name,
           price: chosenRate.price,
         },
-        total_price: totalPrice + chosenRate.price
+        total_price: totalPrice + Number(chosenRate.price),
       });
 
       await User.updateOne({_id: userId}, {
