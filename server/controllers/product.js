@@ -12,7 +12,7 @@ module.exports = {
   getById: (req, res) => {
     const { id } = req.params;
 
-    Product.findOne({_id: id}).then((product) => {
+    Product.findOne({_id: id}).populate('category_id', 'name').populate('reviews').exec().then((product) => {
       res.status(200).json({message: 'product has been fetched', product});
     }).catch((err) => {
       res.status(400).json({message: 'unable to fetch products'});
