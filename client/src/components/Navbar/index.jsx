@@ -123,7 +123,7 @@ class Navbar extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.title} variant="h4" color="inherit" noWrap>
+            <Typography className={classes.title} variant="h2" color="inherit" noWrap>
               <Link to="/" style={{ textDecoration: 'none', color:'black' }}>
                 Seekneakers
               </Link>
@@ -158,7 +158,7 @@ class Navbar extends Component {
                 onClick={this.handleJoinMenuOpen}
                 color="inherit"
               >
-                <Typography variant="h7">
+                <Typography variant="h6">
                   Join Now
                 </Typography>
               </IconButton>

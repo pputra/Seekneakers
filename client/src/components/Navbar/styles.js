@@ -3,6 +3,9 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 const styles = theme => ({
   root: {
     width: '100%',
+    position: 'fixed',
+    top: 0,
+    zIndex: 1000,
   },
   navBar: {
     backgroundColor: "white",
@@ -24,6 +27,9 @@ const styles = theme => ({
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
+    border: 'solid',
+    borderWidth: '0.5px',
+    borderColor: '#A7A7A7',
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),

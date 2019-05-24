@@ -15,10 +15,6 @@ const styles = theme => ({
   cardGrid: {
     padding: `${theme.spacing.unit * 1}px 0`,
   },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing.unit * 6,
-  },
 });
 
 export default styles;

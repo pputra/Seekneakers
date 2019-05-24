@@ -1,19 +1,45 @@
 import React from 'react';
 
 import styles from './styles';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography'
+import { 
+  withStyles, 
+  Typography,
+} from '@material-ui/core';
+
+const linkItems = [
+  {
+    href: 'https://github.com/pputra/Seekneakers',
+    className: 'fab fa-linkedin',
+  },
+  {
+    href: 'https://github.com/pputra/Seekneakers',
+    className: 'fab fa-github',
+  },
+  {
+    href: 'https://github.com/pputra/Seekneakers',
+    className: 'fas fa-globe',
+  },
+];
 
 const Footer = props => {
   const { classes } = props;
   return (
     <footer className={classes.footer}>
-      <Typography variant="h6" align="center" gutterBottom>
-        Footer
+      <Typography variant="subtitle2" gutterBottom>
+        Built by Payoga Putra
       </Typography>
-      <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-        foo bar
-      </Typography>
+      <div className={classes.linkItems}>
+        {linkItems.map(({href, className}) => (
+            <a
+              href={href}
+              style={{color: 'black'}}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className={className} />
+            </a>
+        ))}
+      </div>
     </footer>
   );
 };
