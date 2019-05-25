@@ -124,6 +124,20 @@ module.exports = {
         return;
       }
 
+      const conditions = {
+        reviews: {
+          '$in': [id]
+        }
+      };
+
+      const docs = {
+        '$pull': {
+          reviews: id
+        }
+      }
+
+      await Product.updateOne(conditions, docs);
+
       res.status(200).json({
         message: 'review has been removed',
       });

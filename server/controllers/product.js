@@ -12,9 +12,23 @@ module.exports = {
   getById: (req, res) => {
     const { id } = req.params;
 
-    Product.findOne({_id: id}).populate('category_id', 'name').populate('reviews').exec().then((product) => {
-      res.status(200).json({message: 'product has been fetched', product});
-    }).catch((err) => {
+    const populateReviewOptions= {
+      path: 'reviews',
+      populate: {
+        path: 'user_id',
+        model: 'User',
+        select: ['first_name', 'last_name']
+      },
+    };
+    
+    Product
+      .findOne({_id: id})
+      .populate('category_id', 'name')
+      .populate(populateReviewOptions)
+      .exec().then((product) => {
+        res.status(200).json({message: 'product has been fetched', product});
+    })
+    .catch((err) => {
       res.status(400).json({message: 'unable to fetch products'});
     });
   },
