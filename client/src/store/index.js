@@ -8,6 +8,7 @@ import cartReducer from './reducers/cart';
 import checkoutReducer from './reducers/checkout';
 import ordersReducer from './reducers/order';
 import productDetailReducer from './reducers/productDetail';
+import reviewReducer from './reducers/review';
 
 const combinedReducers = combineReducers({
   productsReducer,
@@ -17,6 +18,7 @@ const combinedReducers = combineReducers({
   checkoutReducer,
   ordersReducer,
   productDetailReducer,
+  reviewReducer,
 });
 
 const store = createStore(combinedReducers, applyMiddleware(thunk));

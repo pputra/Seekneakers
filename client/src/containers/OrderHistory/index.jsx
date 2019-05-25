@@ -17,6 +17,7 @@ class OrderHistory extends Component {
     const {
       classes,
       orders,
+      history,
     } = this.props;
     const hasEmptyOrder = orders.length === 0;
 
@@ -32,6 +33,7 @@ class OrderHistory extends Component {
               date={order.createdAt}
               totalPrice={order.total_price}
               products={order.products}
+              history={history}
             />
           ))
         }

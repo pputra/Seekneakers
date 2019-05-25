@@ -23,6 +23,7 @@ const OrderList = props => {
     date,
     totalPrice,
     products,
+    history,
   } = props;
   
   return (
@@ -59,6 +60,8 @@ const OrderList = props => {
                   imageSrc={product.product_id.image_src}
                   name={product.product_id.name}
                   quantity={product.quantity}
+                  history={history}
+                  productId={product.product_id._id}
                 />
               </ListItem>
             ))}

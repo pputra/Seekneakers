@@ -6,24 +6,36 @@ import {
   restockProductById,
 } from '../../store/actions/product';
 import { addProductToCartById } from '../../store/actions/cart';
+import { 
+  handleReviewForm,
+  submitReview,
+} from '../../store/actions/review';
 
 import ProductDetailCard from '../../components/Cards/ProductDetail';
+import ReviewSection from './ReviewSection';
 import styles from './styles';
-import { 
-  withStyles, 
-  Typography, 
-  Paper,
-  Avatar,
-  Divider,
-  TextField,
-  FormControl,
-  InputLabel,
-  NativeSelect,
-} from '@material-ui/core';
-
-const reviewContent= "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."
+import { withStyles } from '@material-ui/core';
 
 class ProductDetail extends Component {
+  onSubmitReview = () => {
+    const {
+      submitReview,
+      match: {params: {productId}},
+      title,
+      content,
+      rating,
+    } = this.props;
+
+    const data = {
+      productId, 
+      title, 
+      content, 
+      rating
+    };
+
+    submitReview(data);
+  }
+
   componentDidMount() {
     const { 
       fetchProductDetailByid,
@@ -39,6 +51,10 @@ class ProductDetail extends Component {
       product,
       addProductToCartById,
       restockProductById,
+      handleReviewForm,
+      rating,
+      title,
+      content,
     } = this.props;
 
     return (
@@ -53,69 +69,15 @@ class ProductDetail extends Component {
           addProductToCartById={() => addProductToCartById(productId)}
           restockProductById={() => restockProductById(productId, true)}
         />
-        <div style={{width: '40%', justifyContent:'center', alignItems:'center', display:'flex', marginTop:'1%', flexDirection:'column'}}>
-          <Paper style={{width:'100%'}}>
-            <div style={{marginTop:10, marginLeft:10}}>
-              <Typography variant="title">Leave a review</Typography>
-            </div>
-            <div style={{margin:10}}>
-              <FormControl width={"100%"}>
-                <InputLabel>Rating</InputLabel>
-                <NativeSelect>
-                  <option value={1}>1</option>
-                  <option value={1}>2</option>
-                  <option value={1}>3</option>
-                </NativeSelect>
-              </FormControl>
-            </div>
-            <div style={{margin:10, marginTop:0}}>
-              <TextField
-                id="outlined-multiline-flexible"
-                label="Title"
-                multiline
-                rowsMax="4"
-                value={"lol"}
-                //onChange={this.handleChange('multiline')}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-              />
-            </div>
-            <div style={{margin:10, marginTop:0}}>
-              <TextField
-                id="outlined-multiline-flexible"
-                label="Content"
-                multiline
-                rowsMax="4"
-                value={"lol"}
-                //onChange={this.handleChange('multiline')}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-              />
-            </div>
-          </Paper>
-        </div>
-        <div style={{width: '40%', justifyContent:'center', alignItems:'center', display:'flex', marginTop:'1%'}}>
-          <Paper style={{width:'100%',}}>
-            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-              <Avatar style={{margin:10}}>J</Avatar>
-              <Typography>John Doe</Typography>
-            </div>
-            <div style={{marginLeft:10, display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-              <div style={{marginRight:10}}>
-                <Typography>rating: 5</Typography>
-              </div>
-              <div>
-                <Typography variant="subtitle2">NICE PRODUCT</Typography>
-              </div>
-            </div>
-            <Divider />
-            <div style={{margin:10}}>
-              <Typography>{reviewContent}</Typography>
-            </div>
-          </Paper>
-        </div>
+        <ReviewSection 
+          reviews={product.reviews}
+          handleReviewForm={handleReviewForm}
+          rating={rating}
+          title={title}
+          content={content}
+          onSubmitReview={this.onSubmitReview}
+          productId={productId}
+        />
       </div>
     );
   }
@@ -123,12 +85,17 @@ class ProductDetail extends Component {
 
 const mapStateToProps = state => ({
   product: state.productDetailReducer.product,
+  rating: state.reviewReducer.rating,
+  title: state.reviewReducer.title,
+  content: state.reviewReducer.content,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchProductDetailByid: (productId) => dispatch((fetchProductDetailByid(productId))),
   addProductToCartById: (productId) => dispatch(addProductToCartById(productId)),
-  restockProductById: (productId, isFromDetailPage) => dispatch(restockProductById(productId, isFromDetailPage))
+  restockProductById: (productId, isFromDetailPage) => dispatch(restockProductById(productId, isFromDetailPage)),
+  handleReviewForm: (key, value) => dispatch(handleReviewForm(key, value)),
+  submitReview: (data) => dispatch(submitReview(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ProductDetail));

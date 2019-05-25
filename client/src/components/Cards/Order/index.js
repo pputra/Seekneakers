@@ -10,9 +10,11 @@ import {
 const OrderCard = props => {
   const {  
     classes,
+    history,
     imageSrc,
     name,
     quantity,
+    productId,
   } = props;
 
   return (
@@ -32,7 +34,9 @@ const OrderCard = props => {
         <Typography>
           Qty: {quantity}
         </Typography>
-        <Button size="small">
+        <Button size="small"
+          onClick={() => history.push(`/product/${productId}`)}
+        >
           Leave a Review
         </Button>
       </div>
