@@ -147,4 +147,130 @@ module.exports = {
       });
     }
   },
+  like: async (req, res) => {
+    const { userId } = req.decoded;
+    const { id } = req.params;
+    let review;
+
+    try {
+      review = await Review.findOne({_id: id});
+
+      if (!review) {
+        res.status(400).json({
+          message: 'invalid review id',
+        });
+        return;
+      }
+    } catch (err) {
+      res.status(400).json({
+        message: 'invalid review id',
+      });
+    }
+    
+    const prevLikeIndex = review.likes.findIndex((id) => (
+      id == userId
+    ));
+
+    if (prevLikeIndex !== -1) {
+      review.likes.splice(prevLikeIndex, 1);
+
+      try {
+        await review.save();
+
+        res.status(200).json({
+          message: 'you have unliked this review'
+        });
+      } catch (err) {
+        res.status(500).json({
+          message: err.message
+        });
+      }
+      return;
+    }
+
+    const dislikeIndexToRemove = review.dislikes.findIndex((id)=> (
+      id == userId
+    ));
+
+    if (dislikeIndexToRemove !== -1 ) {
+      review.dislikes.splice(dislikeIndexToRemove, 1);
+    }
+
+    review.likes.push(userId);
+
+    try {
+      await review.save();
+
+      res.status(200).json({
+        message: 'review has been liked successfully'
+      });
+    } catch (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  },
+  dislike: async (req, res) => {
+    const { userId } = req.decoded;
+    const { id } = req.params;
+    let review;
+
+    try {
+      review = await Review.findOne({_id: id});
+
+      if (!review) {
+        res.status(400).json({
+          message: 'invalid review id',
+        });
+        return;
+      }
+    } catch (err) {
+      res.status(400).json({
+        message: 'invalid review id',
+      });
+    }
+
+    const prevDislikeIndex = review.dislikes.findIndex((id) => (
+      id == userId
+    ));
+
+    if (prevDislikeIndex !== -1) {
+      review.dislikes.splice(prevDislikeIndex, 1);
+
+      try {
+        await review.save();
+
+        res.status(200).json({
+          message: 'you have undisliked this review'
+        });
+      } catch (err) {
+        res.status(500).json({
+          message: err.message
+        });
+      }
+      return;
+    }
+
+    const likeIndexToRemove = review.likes.findIndex((id)=> (
+      id == userId
+    ));
+
+    if (likeIndexToRemove !== -1 ) {
+      review.likes.splice(likeIndexToRemove, 1);
+    }
+
+    review.dislikes.push(userId);
+
+    try {
+      await review.save();
+
+      res.status(200).json({
+        message: 'review has been disliked successfully'
+      });
+    } catch (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
 };

@@ -38,8 +38,7 @@ const LoginForm = props => {
           <Button
             type="submit"
             fullWidth
-            variant="contained"
-            color="primary"
+            variant="outlined"
             className={classes.submit}
             onClick={(e) => handleSubmit(e)}
           >

@@ -1,3 +1,4 @@
+import history from '../../../history';
 import axios from 'axios';
 import { DEFAULT_URI } from '../../../config';
 import * as actionTypes from '../actionTypes';
@@ -147,5 +148,34 @@ export const cancelEditReview = () => {
     dispatch({
       type: actionTypes.SUBMIT_REVIEW_SUCCEED,
     });
+  }
+}
+
+export const voteReview = (type, reviewId, productId) => {
+  return async dispatch => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      history.push('/login');
+      return;
+    }
+
+    try {
+      await axios({
+        method: 'PATCH',
+        url: `${DEFAULT_URI}/review/${type}/${reviewId}`,
+        headers: {
+          token,
+        }
+      });
+
+      fetchProductDetailByid(productId)(dispatch);
+    } catch (err) {
+      alert(err.response.data.message);
+      dispatch({
+        type: actionTypes.SUBMIT_REVIEW_FAILED,
+        errMessage: err.response.data.message,
+      });
+    }
   }
 }

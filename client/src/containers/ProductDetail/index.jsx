@@ -14,6 +14,7 @@ import {
   setCurrentEditId,
   editReview,
   cancelEditReview,
+  voteReview,
 } from '../../store/actions/review';
 
 import ProductDetailCard from '../../components/Cards/ProductDetail';
@@ -84,6 +85,7 @@ class ProductDetail extends Component {
       restockProductById,
       handleReviewForm,
       deleteReview,
+      voteReview,
       cancelEditReview,
       setCurrentEditId,
       currEditId,
@@ -121,6 +123,7 @@ class ProductDetail extends Component {
           editContent={editContent}
           onEditReview={this.onEditReview}
           onCancelEditReview={cancelEditReview}
+          onVoteReview={voteReview}
         />
       </div>
     );
@@ -151,6 +154,7 @@ const mapDispatchToProps = dispatch => ({
   editReview: (data) => dispatch(editReview(data)),
   cancelEditReview: () => dispatch(cancelEditReview()),
   leaveProductDetailPage: () => dispatch(leaveProductDetailPage()),
+  voteReview: (type, reviewId, productId) => dispatch(voteReview(type, reviewId, productId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ProductDetail));

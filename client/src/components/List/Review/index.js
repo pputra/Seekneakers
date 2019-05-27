@@ -23,7 +23,10 @@ const ReviewList = props => {
     title,
     content,
     rating,
+    likes,
+    dislikes,
     userId,
+    onVoteReview,
     onDelete,
 
     productId,
@@ -32,7 +35,12 @@ const ReviewList = props => {
   
   const initial = firstName[0];
   const currUserId = localStorage.getItem('user_id');
-  
+  const hasLiked = likes.indexOf(currUserId) !== -1;
+  const hasDisliked = dislikes.indexOf(currUserId) !== -1;
+  const voteColor = '#f50057';
+  const likeButtonStyle = hasLiked && {backgroundColor: voteColor, color:'white'};
+  const dislikeButtonStyle = hasDisliked && {backgroundColor: voteColor, color:'white'};
+
   return (
     <Paper className={classes.root}>
       <div className={classes.username}>
@@ -53,17 +61,25 @@ const ReviewList = props => {
       </div>
       <div className={classes.actions}>
         <div>
-          <Button variant="outlined" style={{backgroundColor:'#f50057', color:'white'}}>
+          <Button 
+            variant="outlined" 
+            style={{...likeButtonStyle}}
+            onClick={() => onVoteReview('like', reviewId, productId)}
+          >
              <Icon>
                <ThumbUp />
              </Icon>
-            (0)
+            ({likes.length})
           </Button>
-          <Button variant="outlined" style={{marginLeft:10}}>
+          <Button 
+            variant="outlined" 
+            style={{...dislikeButtonStyle, marginLeft:10,}}
+            onClick={() => onVoteReview('dislike', reviewId, productId)}
+          >
             <Icon>
               <ThumbDown />
             </Icon>
-            (0)
+            ({dislikes.length})
           </Button>
         </div>
         {currUserId === userId &&

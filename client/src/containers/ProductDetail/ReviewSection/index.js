@@ -13,6 +13,7 @@ const ReviewSection = props => {
     handleReviewForm,
     onSubmitReview,
     onDeleteReview,
+    onVoteReview,
     onSetCurrentEditId,
     onEditReview,
     onCancelEditReview,
@@ -91,10 +92,13 @@ const ReviewSection = props => {
               content={review.content}
               rating={review.rating}
               userId={review.user_id._id}
+              likes={review.likes}
+              dislikes={review.dislikes}
               onDelete={onDeleteReview}
               onSetCurrentEditId={() => onSetCurrentEditId(review._id, review.title, review.content, review.rating)}
               currEditId={currEditId}
               productId={productId}
+              onVoteReview={onVoteReview}
             />
           );
         })}
