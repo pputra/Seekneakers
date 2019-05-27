@@ -25,7 +25,9 @@ const ReviewList = props => {
     rating,
     userId,
     onDelete,
+
     productId,
+    onSetCurrentEditId,
   } = props;
   
   const initial = firstName[0];
@@ -66,7 +68,11 @@ const ReviewList = props => {
         </div>
         {currUserId === userId &&
           <div>
-            <Button variant="outlined" style={{marginRight:10}}>
+            <Button 
+              variant="outlined" 
+              style={{marginRight:10}}
+              onClick={onSetCurrentEditId}
+            >
               edit
             </Button>
             <Button 

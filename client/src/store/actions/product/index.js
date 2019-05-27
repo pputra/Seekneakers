@@ -133,3 +133,15 @@ export const fetchCategories = () => {
     }
   }
 };
+
+export const leaveProductDetailPage = () => {
+  return dispatch => {
+    dispatch({
+      type: actionTypes.RESET_REVIEW_FORM,
+    });
+
+    dispatch({
+      type: actionTypes.LEAVE_PRODUCT_DETAIL_PAGE,
+    });
+  }
+}

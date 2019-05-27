@@ -26,6 +26,10 @@ const reducer = (state = defaultState, action) => {
         loading: false,
         errMessage: '',
       }
+    case actionTypes.LEAVE_PRODUCT_DETAIL_PAGE:
+      return {
+        ...defaultState,
+      }
     default :
       return state;
   }

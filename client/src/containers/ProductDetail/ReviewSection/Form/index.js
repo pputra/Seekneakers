@@ -17,7 +17,11 @@ const ReviewForm = props => {
     onSubmit,
     formTitle,
     submitLabel,
+    editMode,
+    onCancel,
   } = props;
+
+  const ratingKey = editMode ? 'editRating' : 'rating';
 
   return (
     <Paper style={{width:'100%'}}>
@@ -29,7 +33,7 @@ const ReviewForm = props => {
           <InputLabel>Rating</InputLabel>
           <NativeSelect
             defaultValue={5}
-            onChange={({target: {value}}) => handleChange('rating', value)}
+            onChange={({target: {value}}) => handleChange( ratingKey, value)}
           >
             {[...Array(5)].map((el,i) => (
               <option value={i + 1}>{i + 1}</option>
@@ -61,6 +65,17 @@ const ReviewForm = props => {
            {submitLabel}
         </Button>
       </div>
+      {editMode &&
+        <div style={{margin:10, marginTop:0}}>
+          <Button 
+            variant="outlined" 
+            fullWidth={true}
+            onClick={onCancel}
+          >
+            cancel
+          </Button>
+        </div>
+      }
     </Paper>
   );
 }

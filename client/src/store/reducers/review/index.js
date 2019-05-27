@@ -6,6 +6,10 @@ const defaultState = {
   title: '',
   content: '',
   rating: 5,
+  currEditId: '',
+  editTitle: '',
+  editContent:'',
+  editRating: 5,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -29,6 +33,14 @@ const reducer = (state = defaultState, action) => {
         ...state,
         loading: false,
         errMessage: action.errMessage,
+      }
+    case actionTypes.SET_CURRENT_EDIT_ID:
+      return {
+        ...state,
+        currEditId: action.reviewId,
+        editTitle: action.editTitle,
+        editContent: action.editContent,
+        editRating: action.editRating,
       }
     case actionTypes.RESET_REVIEW_FORM:
       return {
