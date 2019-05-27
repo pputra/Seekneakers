@@ -19,9 +19,15 @@ export const login = (email, password) => {
         }
       });
 
-      const { token, first_name, last_name } = response.data;
+      const { 
+        token,
+        user_id, 
+        first_name, 
+        last_name,
+       } = response.data;
       
       localStorage.setItem('token', token);
+      localStorage.setItem('user_id', user_id);
 
       dispatch({
         type: actionTypes.LOGIN_SUCCEED,

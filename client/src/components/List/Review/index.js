@@ -7,20 +7,30 @@ import {
   Avatar,
   Typography,
   Divider,
+  Button,
+  Icon,
 } from '@material-ui/core';
+import Delete from '@material-ui/icons/Delete';
+import ThumbUp from '@material-ui/icons/ThumbUp';
+import ThumbDown from '@material-ui/icons/ThumbDown';
 
 const ReviewList = props => {
   const {
     classes,
+    reviewId,
     firstName,
     lastName,
     title,
     content,
     rating,
+    userId,
+    onDelete,
+    productId,
   } = props;
   
   const initial = firstName[0];
-
+  const currUserId = localStorage.getItem('user_id');
+  
   return (
     <Paper className={classes.root}>
       <div className={classes.username}>
@@ -38,6 +48,37 @@ const ReviewList = props => {
       <Divider />
       <div className={classes.content}>
         <Typography>{content}</Typography>
+      </div>
+      <div className={classes.actions}>
+        <div>
+          <Button variant="outlined" style={{backgroundColor:'#f50057', color:'white'}}>
+             <Icon>
+               <ThumbUp />
+             </Icon>
+            (0)
+          </Button>
+          <Button variant="outlined" style={{marginLeft:10}}>
+            <Icon>
+              <ThumbDown />
+            </Icon>
+            (0)
+          </Button>
+        </div>
+        {currUserId === userId &&
+          <div>
+            <Button variant="outlined" style={{marginRight:10}}>
+              edit
+            </Button>
+            <Button 
+              variant="outlined" 
+              onClick={() => onDelete(reviewId, productId)}
+            >
+              <Icon>
+                <Delete />
+              </Icon>
+            </Button>
+          </div>
+        }
       </div>
     </Paper>
   );

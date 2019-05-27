@@ -41,7 +41,7 @@ module.exports = {
     User.findOne({email: email, password: encrypt(password)}).then((user) => {
       if (user) {
         const token = generateToken(user._id, email);
-        res.status(200).json({message: 'user has been sucessfully logged in', token });
+        res.status(200).json({message: 'user has been sucessfully logged in', token, user_id:user._id });
       } else {
         res.status(400).json({message: 'invalid email or password'});
       }

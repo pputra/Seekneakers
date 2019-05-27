@@ -9,6 +9,7 @@ import { addProductToCartById } from '../../store/actions/cart';
 import { 
   handleReviewForm,
   submitReview,
+  deleteReview,
 } from '../../store/actions/review';
 
 import ProductDetailCard from '../../components/Cards/ProductDetail';
@@ -52,6 +53,7 @@ class ProductDetail extends Component {
       addProductToCartById,
       restockProductById,
       handleReviewForm,
+      deleteReview,
       rating,
       title,
       content,
@@ -77,6 +79,7 @@ class ProductDetail extends Component {
           content={content}
           onSubmitReview={this.onSubmitReview}
           productId={productId}
+          onDeleteReview={deleteReview}
         />
       </div>
     );
@@ -96,6 +99,7 @@ const mapDispatchToProps = dispatch => ({
   restockProductById: (productId, isFromDetailPage) => dispatch(restockProductById(productId, isFromDetailPage)),
   handleReviewForm: (key, value) => dispatch(handleReviewForm(key, value)),
   submitReview: (data) => dispatch(submitReview(data)),
+  deleteReview: (reviewId, productId) => dispatch(deleteReview(reviewId, productId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ProductDetail));

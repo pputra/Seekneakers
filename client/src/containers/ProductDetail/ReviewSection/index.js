@@ -12,6 +12,7 @@ const ReviewSection = props => {
     productId,
     handleReviewForm,
     onSubmitReview,
+    onDeleteReview,
     title,
     content,
   } = props;
@@ -45,12 +46,16 @@ const ReviewSection = props => {
       </div>
       <div className={classes.reviewList}>
         {reviews && reviews.map((review) => (
-          <ReviewList 
+          <ReviewList
+            reviewId= {review._id}
             firstName={review.user_id.first_name}
             lastName={review.user_id.last_name}
             title={review.title}
             content={review.content}
             rating={review.rating}
+            userId={review.user_id._id}
+            onDelete={onDeleteReview}
+            productId={productId}
           />
         ))}
       </div>

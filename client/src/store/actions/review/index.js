@@ -55,3 +55,31 @@ export const submitReview = (data) => {
     }
   }
 }
+
+export const deleteReview = (reviewId, productId) => {
+  return async dispatch => {
+    const token = localStorage.getItem('token');
+
+    dispatch({
+      type: actionTypes.SUBMIT_REVIEW_LOADING,
+    });
+
+    try {
+      await axios({
+        method: 'DELETE',
+        headers: {
+          token,
+        },
+        url: `${DEFAULT_URI}/review/${reviewId}`
+      });
+
+      fetchProductDetailByid(productId)(dispatch);
+    } catch (err) {
+      alert(err.response.data.message);
+      dispatch({
+        type: actionTypes.SUBMIT_REVIEW_FAILED,
+        errMessage: err.response.data.message,
+      });
+    }
+  }
+}
