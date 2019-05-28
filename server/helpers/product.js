@@ -13,12 +13,12 @@ module.exports = {
         return;
       case 'name_ascending':
         products.sort((prod1, prod2) => (
-          prod1.name.toLowerCase() - prod2.name.toLowerCase()
+          prod1.name.toLowerCase().localeCompare(prod2.name.toLowerCase())
         ));
         return;
       case 'name_descending':
         products.sort((prod1, prod2) => (
-          prod2.name.toLowerCase() - prod1.name.toLowerCase()
+          prod2.name.toLowerCase().localeCompare(prod1.name.toLowerCase())
         ));
         return;
       case 'popularity':

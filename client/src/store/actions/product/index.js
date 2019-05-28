@@ -3,16 +3,18 @@ import axios from 'axios';
 import { DEFAULT_URI } from'../../../config'
 import * as actionTypes from '../actionTypes';
 
-export const fetchProducts = () => {
+export const fetchProducts = (sortBy) => {
   return async dispatch => {
     dispatch({
       type: actionTypes.LOADING
     });
 
+    const url = sortBy ? `${DEFAULT_URI}/products?sort_by=${sortBy}` : `${DEFAULT_URI}/products`;
+    
     try {
       const response = await axios({
         method: 'GET',
-        url: `${DEFAULT_URI}/products`
+        url,
       });
 
       const { products } = response.data;

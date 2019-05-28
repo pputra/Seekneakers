@@ -5,17 +5,15 @@ import {
   fetchProducts,
   restockProductById,
 } from '../../store/actions/product';
-import { addProductToCartById } from '../../store/actions/cart';
+import {
+  addProductToCartById ,
+} from '../../store/actions/cart';
 
+import SortMenus from './SortMenus';
 import ProductList from './ProductList';
-import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import classNames from 'classnames';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles } from '@material-ui/core/styles';
 
 class Dashboard extends Component {
   state = {
@@ -27,12 +25,18 @@ class Dashboard extends Component {
     onFetchProducts();
   }
 
-  handleClick = event => {
+  handleShowSortMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  handleClose = () => {
+  handleCloseSortMenu = () => {
     this.setState({ anchorEl: null });
+  }
+
+  handleProductSorting = (sortBy) => {
+    const { onFetchProducts } = this.props
+    this.setState({ anchorEl: null });
+    onFetchProducts(sortBy);
   };
 
   render() {
@@ -45,44 +49,42 @@ class Dashboard extends Component {
       onRestockProductById,
     } = this.props;
 
+    const sortTypes = [
+      {
+        label: 'Price: Low to high',
+        fn: () => this.handleProductSorting('price_ascending')
+      },
+      {
+        label: 'Price: High to low',
+        fn: () => this.handleProductSorting('price_descending')
+      },
+      {
+        label: 'Name: A to Z',
+        fn: () => this.handleProductSorting('name_ascending')
+      },
+      {
+        label: 'Name: Z to A',
+        fn: () => this.handleProductSorting('name_descending')
+      },
+      {
+        label: 'Rating',
+        fn: () => this.handleProductSorting('rating')
+      },
+      {
+        label: 'Popularity',
+        fn: () => this.handleProductSorting('popularity')
+      },
+    ];
+
     return (
       <Fragment>
         <div className={classNames(classes.layout, classes.cardGrid)}>
-          <Grid  className={classes.filterMenu} container spacing={16} justify="flex-start">
-            <Grid item>
-              <Button 
-                variant="outlined" 
-                color="default"
-                onClick={this.handleClick}
-              >
-                <Typography>
-                  Sort By
-                </Typography>
-              </Button>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.handleClose}
-              >
-                <MenuItem onClick={this.handleClose}>
-                  <Typography>
-                    Price: Low to high
-                  </Typography>
-                </MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <Typography>
-                    Price: High to low
-                  </Typography>
-                </MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <Typography>
-                    Rating
-                  </Typography>
-                </MenuItem>
-              </Menu>
-            </Grid>
-          </Grid>
+          <SortMenus 
+            anchorEl={anchorEl}
+            handleShowSortMenu={this.handleShowSortMenu}
+            handleCloseSortMenu={this.handleCloseSortMenu}
+            sortTypes={sortTypes}
+          />
           <ProductList 
             history={history}
             products={products} 
@@ -100,7 +102,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onFetchProducts: () => dispatch(fetchProducts()),
+  onFetchProducts: (sortBy) => dispatch(fetchProducts(sortBy)),
   onProductAddedToCartById: (productId, history) => dispatch(addProductToCartById(productId, history)),
   onRestockProductById: (productId) => dispatch(restockProductById(productId)),
 });

@@ -9,9 +9,6 @@ const styles = theme => ({
       marginRight: 'auto',
     },
   },
-  filterMenu: {
-    marginTop: '1px',
-  },
   cardGrid: {
     padding: `${theme.spacing.unit * 1}px 0`,
   },

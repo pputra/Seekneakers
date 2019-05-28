@@ -8,7 +8,7 @@ import {
 
 const linkItems = [
   {
-    href: 'https://github.com/pputra/Seekneakers',
+    href: 'https://www.linkedin.com/in/payogaputra/',
     className: 'fab fa-linkedin',
   },
   {
@@ -16,7 +16,7 @@ const linkItems = [
     className: 'fab fa-github',
   },
   {
-    href: 'https://github.com/pputra/Seekneakers',
+    href: 'https://payogaputra.com',
     className: 'fas fa-globe',
   },
 ];
