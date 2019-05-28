@@ -1,9 +1,15 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
+const { sortByQueryType } = require('../helpers/product');
 
 module.exports = {
   getAll: (req, res) => {
-    Product.find().populate('category_id', 'name').then((products) => {
+    Product.find().populate('category_id', 'name').populate('reviews').then((products) => {
+      const { sort_by } = req.query;
+      if (sort_by) {
+        sortByQueryType(sort_by, products);
+      }
+      
       res.status(200).json({message: 'products has been fetched', products});
     }).catch((err) => {
       res.status(400).json({message: 'unable to fetch products'});
