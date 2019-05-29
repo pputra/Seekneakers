@@ -4,13 +4,20 @@ const { sortByQueryType } = require('../helpers/product');
 
 module.exports = {
   getAll: (req, res) => {
+    const { keywords } = req.query;
+
+    if (keywords) {
+      module.exports.getByKeywords(res, keywords);
+      return;
+    }
+
     Product.find().populate('category_id', 'name').populate('reviews').then((products) => {
       const { sort_by } = req.query;
       if (sort_by) {
         sortByQueryType(sort_by, products);
       }
       
-      res.status(200).json({message: 'products has been fetched', products});
+      res.status(200).json({message: 'products have been fetched', products});
     }).catch((err) => {
       res.status(400).json({message: 'unable to fetch products'});
     });
@@ -35,6 +42,20 @@ module.exports = {
         res.status(200).json({message: 'product has been fetched', product});
     })
     .catch((err) => {
+      res.status(400).json({message: 'unable to fetch products'});
+    });
+  },
+  getByKeywords: (res, keywords) => {
+    const options= {
+      name: new RegExp(keywords, 'i'),
+    }
+    
+    Product.find(options, 'name image_src').then((products) => {
+      res.status(200).json({
+        message: 'products have been fetched',
+        products,
+      });
+    }).catch((err) => {
       res.status(400).json({message: 'unable to fetch products'});
     });
   },

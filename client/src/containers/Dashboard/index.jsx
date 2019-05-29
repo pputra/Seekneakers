@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { 
   fetchProducts,
   restockProductById,
+  sortProducts,
 } from '../../store/actions/product';
 import {
   addProductToCartById ,
@@ -34,9 +35,9 @@ class Dashboard extends Component {
   }
 
   handleProductSorting = (sortBy) => {
-    const { onFetchProducts } = this.props
+    const { onSortProducts } = this.props
     this.setState({ anchorEl: null });
-    onFetchProducts(sortBy);
+    onSortProducts(sortBy);
   };
 
   render() {
@@ -102,9 +103,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onFetchProducts: (sortBy) => dispatch(fetchProducts(sortBy)),
+  onFetchProducts: () => dispatch(fetchProducts()),
   onProductAddedToCartById: (productId, history) => dispatch(addProductToCartById(productId, history)),
   onRestockProductById: (productId) => dispatch(restockProductById(productId)),
+  onSortProducts: (sortBy) => dispatch(sortProducts(sortBy)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Dashboard));

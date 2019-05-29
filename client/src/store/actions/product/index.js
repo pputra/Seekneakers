@@ -3,18 +3,16 @@ import axios from 'axios';
 import { DEFAULT_URI } from'../../../config'
 import * as actionTypes from '../actionTypes';
 
-export const fetchProducts = (sortBy) => {
+export const fetchProducts = () => {
   return async dispatch => {
     dispatch({
       type: actionTypes.LOADING
     });
-
-    const url = sortBy ? `${DEFAULT_URI}/products?sort_by=${sortBy}` : `${DEFAULT_URI}/products`;
-    
+ 
     try {
       const response = await axios({
         method: 'GET',
-        url,
+        url: `${DEFAULT_URI}/products`,
       });
 
       const { products } = response.data;
@@ -30,6 +28,72 @@ export const fetchProducts = (sortBy) => {
     }
   };
 };
+
+export const sortProducts = (sortBy) => {
+  return async dispatch => {
+    dispatch({
+      type: actionTypes.LOADING
+    });
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${DEFAULT_URI}/products?sort_by=${sortBy}`,
+      });
+
+      const { products } = response.data;
+
+      dispatch({
+        type: actionTypes.FETCH_PRODUCTS,
+        products
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.ERROR
+      });
+    }
+  }
+}
+
+export const fetchProductsByKeywords = keywords => {
+  return async dispatch => {
+    if (!keywords) {
+      dispatch({
+        type: actionTypes.FETCH_PRODUCTS_BY_KEYWORDS,
+        products: [],
+      });
+      return;
+    }
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${DEFAULT_URI}/products?keywords=${keywords}`
+      });
+
+      const { products } = response.data;
+
+      dispatch({
+        type: actionTypes.FETCH_PRODUCTS_BY_KEYWORDS,
+        products,
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.ERROR
+      });
+    }
+  }
+}
+
+export const selectFilteredProducts = productId => {
+  return dispatch => {
+    history.push(`/product/${productId}`);
+    dispatch({
+      type: actionTypes.FETCH_PRODUCTS_BY_KEYWORDS,
+      products: [],
+    });
+  }
+}
 
 export const fetchProductDetailByid = productId => {
   return async dispatch => {

@@ -2,21 +2,28 @@ import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchCategories, fetchProductsByCategory } from '../../store/actions/product';
+import { 
+  fetchCategories, 
+  fetchProductsByCategory, 
+  fetchProductsByKeywords, 
+  selectFilteredProducts, 
+} from '../../store/actions/product';
 import { fetchCart } from '../../store/actions/cart';
 
 import SideDrawer from './SideDrawer';
-
+import SearchResults from './SearchResults';
 import styles from './styles';
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
+import {
+  withStyles,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Badge,
+  MenuItem,
+  Menu,
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import CartIcon from '@material-ui/icons/ShoppingCart'
@@ -59,8 +66,19 @@ class Navbar extends Component {
   };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl, openDrawer } = this.state;
-    const { classes, categories, onFetchProductsByCategory } = this.props;
+    const { 
+      anchorEl, 
+      mobileMoreAnchorEl, 
+      openDrawer,
+    } = this.state;
+    const { 
+      classes, 
+      categories, 
+      onFetchProductsByCategory,
+      onFetchProductsByKeywords,
+      filteredProducts,
+      onSelectFilteredProducts,
+    } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -134,10 +152,15 @@ class Navbar extends Component {
               </div>
               <InputBase
                 placeholder="Search…"
+                onChange={({target: {value}}) => onFetchProductsByKeywords(value)}
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+              />
+              <SearchResults 
+                filteredProducts={filteredProducts}
+                onClick={onSelectFilteredProducts}
               />
             </div>
             <div className={classes.grow} />
@@ -188,12 +211,15 @@ const mapStateToProps = state => ({
   productsInCart: state.cartReducer.products,
   cartTotalPrice: state.cartReducer.totalPrice,
   cartTotalQuantity: state.cartReducer.totalQuantity,
+  filteredProducts: state.productsReducer.filteredProducts,
 });
 
 const mapDispatchToProps = dispatch => ({
   onFetchCategories: () => dispatch(fetchCategories()),
   onFetchProductsByCategory: (categoryId) => dispatch(fetchProductsByCategory(categoryId)),
   onFetchCart: () => dispatch(fetchCart()),
+  onFetchProductsByKeywords: (keywords) => dispatch(fetchProductsByKeywords(keywords)),
+  onSelectFilteredProducts: (productId) => dispatch((selectFilteredProducts(productId))),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Navbar));

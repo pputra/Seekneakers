@@ -14,7 +14,6 @@ const defaultState = {
   phone: '',
   email: '',
 
-  //availableRates: [{"provider":"USPS","name":"Priority Mail Express","image":"https://shippo-static.s3.amazonaws.com/providers/200/USPS.png","estimated_days":1,"duration_terms":"Overnight delivery to most U.S. locations.","price":"46.10"},{"provider":"USPS","name":"Priority Mail","image":"https://shippo-static.s3.amazonaws.com/providers/200/USPS.png","estimated_days":2,"duration_terms":"Delivery within 1, 2, or 3 days based on where your package started and where it’s being sent.","price":"15.28"},{"provider":"USPS","name":"Parcel Select","image":"https://shippo-static.s3.amazonaws.com/providers/200/USPS.png","estimated_days":7,"duration_terms":"Delivery in 2 to 8 days.","price":"14.93"}],
   availableRates: [],
   chosenRateIndex: 0,
 };
