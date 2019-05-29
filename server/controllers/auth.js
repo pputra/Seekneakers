@@ -48,5 +48,19 @@ module.exports = {
     }).catch(() => {
       res.status(400).json({message: 'invalid email or password'});
     });
-  }
+  },
+  getUserInfo: (req, res) => {
+    const { userId } = req.decoded;
+    
+    User.findOne({_id: userId}, 'first_name last_name').then((user) => {
+      res.status(200).json({
+        message: 'user info has been fetched',
+        user
+      });
+    }).catch((err) => {
+      res.status(400).json({
+        message: 'invalid token'
+      });
+    });
+  },
 };

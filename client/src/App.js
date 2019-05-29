@@ -3,7 +3,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import { Provider } from 'react-redux';
 import history from './history';
 import store from './store';
-
+import PrivateRoute from './hoc/PrivateRoute';
 import Layout from './hoc/Layout';
 import Dashboard from './containers/Dashboard';
 import Login from './containers/Auth/Login';
@@ -23,10 +23,10 @@ class App extends Component {
               <Route exact path="/" component={Dashboard} />
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
-              <Route path="/checkout" component={Checkout} />
-              <Route path="/cart" component={Cart} />
-              <Route path="/order" component={OrderHistory} />
               <Route path="/product/:productId" component={ProductDetail} />
+              <PrivateRoute path="/checkout" component={Checkout} />
+              <PrivateRoute path="/cart" component={Cart} />
+              <PrivateRoute path="/order" component={OrderHistory} />
             </Switch>
           </Layout>
         </Router>
