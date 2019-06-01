@@ -9,7 +9,8 @@ const SideDrawer = props => {
     openDrawer, 
     toggleDrawer, 
     categories, 
-    handleSelectedCategory 
+    handleSelectedCategory,
+    handleLogOut, 
   } = props;
   return (
     <Drawer open={openDrawer} onClose={() => toggleDrawer(false)}>
@@ -22,6 +23,7 @@ const SideDrawer = props => {
         <Menus
           categories={categories}
           handleSelectedCategory={handleSelectedCategory}
+          handleLogOut={handleLogOut}
         />
       </div>
     </Drawer>

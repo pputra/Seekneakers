@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import history from './history';
 import store from './store';
 import PrivateRoute from './hoc/PrivateRoute';
-import Layout from './hoc/Layout';
+import Root from './hoc/Root';
 import Dashboard from './containers/Dashboard';
 import Login from './containers/Auth/Login';
 import Register from './containers/Auth/Register';
@@ -18,8 +18,8 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router history={history}>
-          <Layout>
-            <Switch>
+          <Switch>
+            <Root>
               <Route exact path="/" component={Dashboard} />
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
@@ -27,8 +27,8 @@ class App extends Component {
               <PrivateRoute path="/checkout" component={Checkout} />
               <PrivateRoute path="/cart" component={Cart} />
               <PrivateRoute path="/order" component={OrderHistory} />
-            </Switch>
-          </Layout>
+            </Root>
+          </Switch>
         </Router>
       </Provider>
     );

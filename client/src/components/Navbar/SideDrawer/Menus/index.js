@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import history from '../../../../history';
 import styles from './styles';
@@ -9,11 +9,17 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
 const Menus = props => {
-  const { classes, categories, handleSelectedCategory } = props;
+  const { 
+    classes, 
+    categories, 
+    handleSelectedCategory,
+    handleLogOut,
+  } = props;
+  const token = localStorage.getItem('token');
   return (
     <div className={classes.list}>
         <List>
-          <ListItem button>
+          <ListItem>
             <ListItemText primary={'Shop By Category'}/>
           </ListItem>
           {categories.map(({name, _id}) => (
@@ -45,18 +51,17 @@ const Menus = props => {
             />
           </ListItem>
           <Divider/>
-          <ListItem button>
-            <ListItemText primary={'Account'}/>
-          </ListItem>
-          <Divider/>
-          <ListItem button>
-            <ListItemText primary={'My Reviews'}/>
-          </ListItem>
-          <Divider/>
-          <ListItem button>
-            <ListItemText primary={'Sign Out'}/>
-          </ListItem>
-          <Divider/>
+          {token &&
+          <Fragment>
+            <ListItem button>
+              <ListItemText 
+                primary={'Sign Out'}
+                onClick={handleLogOut}
+              />
+            </ListItem>
+            <Divider />
+          </Fragment>
+          }
         </List>
       </div>
   );

@@ -21,9 +21,7 @@ export const login = (email, password) => {
 
       const { 
         token,
-        user_id, 
-        first_name, 
-        last_name,
+        user_id,
        } = response.data;
       
       localStorage.setItem('token', token);
@@ -31,9 +29,10 @@ export const login = (email, password) => {
 
       dispatch({
         type: actionTypes.LOGIN_SUCCEED,
-        firstName: first_name,
-        lastName: last_name,
       });
+
+      getUserInfo()(dispatch);
+      history.push('/');
     } catch (err) {
       dispatch({
         type: actionTypes.LOGIN_FAILED
@@ -68,3 +67,42 @@ export const register = (firstName, lastName, email, password, passwordRepeat) =
     }
   }
 };
+
+export const getUserInfo = () => {
+  return async dispatch => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${DEFAULT_URI}/auth/user-info`,
+        headers: {
+          token,
+        },
+      });
+
+      const { first_name, last_name } = response.data.user;
+
+      dispatch({
+        type: actionTypes.UPDATE_USER_INFO,
+        firstName: first_name,
+        lastName: last_name,
+      });
+    } catch (err) {
+      dispatch({
+        type: actionTypes.UPDATE_USER_INFO,
+        firstName: '',
+        lastName: '',
+      });
+    }
+  }
+}
+
+export const logOut = () => {
+  return dispatch => {
+    dispatch({
+      type: actionTypes.USER_LOGOUT
+    });
+    localStorage.clear();
+  }
+}

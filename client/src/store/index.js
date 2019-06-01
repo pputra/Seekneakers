@@ -1,6 +1,6 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-
+import * as actionTypes from './actions/actionTypes';
 import productsReducer from './reducers/product';
 import userLoginReducer from './reducers/user/login';
 import userRegisterReducer from './reducers/user/register';
@@ -21,6 +21,20 @@ const combinedReducers = combineReducers({
   reviewReducer,
 });
 
-const store = createStore(combinedReducers, applyMiddleware(thunk));
+const rootReducer = (state, action) => {
+  if (action.type === actionTypes.USER_LOGOUT) {
+    const {  
+      productsReducer,
+      productDetailReducer,
+    } = state;
+    state = {
+      productsReducer,
+      productDetailReducer,
+    }
+  }
+  return combinedReducers(state, action)
+}
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default store;

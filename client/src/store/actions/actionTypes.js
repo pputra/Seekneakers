@@ -4,6 +4,8 @@ export const ERROR = 'ERROR';
 export const LOGIN_SUCCEED = 'LOGIN_SUCCEED';
 export const LOGIN_LOADING = 'LOGIN_LOADING';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
+export const UPDATE_USER_INFO = 'UPDATE_USER_INFO';
+export const USER_LOGOUT = 'USER_LOGOUT';
 
 export const REGISTER_SUCEED = 'REGISTER_SUCEED';
 export const REGISTER_LOADING = 'REGISTER_LOADING';

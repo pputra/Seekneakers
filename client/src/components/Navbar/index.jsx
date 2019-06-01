@@ -9,6 +9,7 @@ import {
   selectFilteredProducts, 
 } from '../../store/actions/product';
 import { fetchCart } from '../../store/actions/cart';
+import { logOut } from '../../store/actions/auth';
 
 import SideDrawer from './SideDrawer';
 import SearchResults from './SearchResults';
@@ -23,6 +24,7 @@ import {
   Badge,
   MenuItem,
   Menu,
+  Avatar,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -72,13 +74,16 @@ class Navbar extends Component {
       openDrawer,
     } = this.state;
     const { 
-      classes, 
+      classes,
+      firstName,
       categories, 
       onFetchProductsByCategory,
       onFetchProductsByKeywords,
       filteredProducts,
       onSelectFilteredProducts,
+      onUserLogOut,
     } = this.props;
+    const token = localStorage.getItem('token');
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -175,16 +180,23 @@ class Navbar extends Component {
                   </Badge>
                 </Link>
               </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleJoinMenuOpen}
-                color="inherit"
-              >
-                <Typography variant="h6">
-                  Join Now
-                </Typography>
-              </IconButton>
+              {!token ?
+                <IconButton
+                  aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleJoinMenuOpen}
+                  color="inherit"
+                >
+                  <Typography variant="h6">
+                    Join Now
+                  </Typography>
+                </IconButton> :
+                <IconButton disabled>
+                  <Avatar style={{backgroundColor:'black'}}>
+                    {firstName && firstName[0].toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              }
             </div>
             <div className={classes.sectionMobile}>
               <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
@@ -200,6 +212,7 @@ class Navbar extends Component {
           toggleDrawer={this.toggleDrawer}
           categories={categories}
           handleSelectedCategory={onFetchProductsByCategory}
+          handleLogOut={onUserLogOut}
         />
       </div>
     );
@@ -207,6 +220,7 @@ class Navbar extends Component {
 }
 
 const mapStateToProps = state => ({
+  firstName: state.userLoginReducer.firstName,
   categories: state.productsReducer.categories,
   productsInCart: state.cartReducer.products,
   cartTotalPrice: state.cartReducer.totalPrice,
@@ -220,6 +234,7 @@ const mapDispatchToProps = dispatch => ({
   onFetchCart: () => dispatch(fetchCart()),
   onFetchProductsByKeywords: (keywords) => dispatch(fetchProductsByKeywords(keywords)),
   onSelectFilteredProducts: (productId) => dispatch((selectFilteredProducts(productId))),
+  onUserLogOut: () => dispatch(logOut()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Navbar));
