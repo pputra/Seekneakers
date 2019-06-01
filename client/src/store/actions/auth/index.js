@@ -6,7 +6,7 @@ import * as actionTypes from '../actionTypes';
 export const login = (email, password) => {
   return async dispatch => {
     dispatch({
-      type: actionTypes.LOADING
+      type: actionTypes.LOGIN_LOADING,
     });
 
     try {
@@ -35,7 +35,8 @@ export const login = (email, password) => {
       history.push('/');
     } catch (err) {
       dispatch({
-        type: actionTypes.LOGIN_FAILED
+        type: actionTypes.LOGIN_FAILED,
+        errMessage: err.response.data.message,
       });
     }
   }
@@ -59,6 +60,11 @@ export const register = (firstName, lastName, email, password, passwordRepeat) =
           password_repeat: passwordRepeat,
         },
       });
+
+      dispatch({
+        type: actionTypes.REGISTER_SUCEED,
+      });
+      
       history.push('/login');
     } catch (err) {
       dispatch({

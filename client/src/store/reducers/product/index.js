@@ -1,9 +1,11 @@
 import * as actionTypes from '../../actions/actionTypes';
 
 const defaultState = {
+  loading: false,
   products: [],
   categories: [],
   filteredProducts: [],
+  errMessage: '',
 };
 
 const reducer = (state = defaultState, action) => {
@@ -13,10 +15,22 @@ const reducer = (state = defaultState, action) => {
         ...state,
         categories: action.categories
       }
-    case actionTypes.FETCH_PRODUCTS:
+    case actionTypes.FETCH_PRODUCTS_LOADING:
+      return {
+        ...state,
+        loading: true,
+      }
+    case actionTypes.FETCH_PRODUCTS_SUCCEED:
       return {
         ...state,
         products: action.products,
+        loading: false,
+      }
+    case actionTypes.FETCH_PRODUCTS_FAILED:
+      return {
+        ...state,
+        loading: false,
+        errMessage: action.errMessage,
       }
     case actionTypes.FETCH_PRODUCTS_BY_KEYWORDS:
       return {

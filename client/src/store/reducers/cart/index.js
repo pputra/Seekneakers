@@ -1,7 +1,7 @@
 import * as actionTypes from '../../actions/actionTypes';
 
 const defaultState = {
-  loading: '',
+  loading: false,
   products: [],
   totalPrice: 0,
   totalQuantity: 0,

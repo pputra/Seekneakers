@@ -10,6 +10,10 @@ export const fetchCart = () => {
     if (!token) {
       return;
     }
+
+    dispatch({
+      type: actionTypes.FETCH_CART_LOADING,
+    });
   
     try {
       const response = await axios({
@@ -60,7 +64,7 @@ export const addProductToCartById = (productId) => {
     } catch (err) {
       dispatch({
         type: actionTypes.FETCH_PRODUCT_DETAIL_FAILED,
-        errMessage: err.message,
+        errMessage: err.response.data.message,
       });
     }
   }

@@ -28,7 +28,7 @@ export const fetchOrders = () => {
     } catch (err) {
       dispatch({
         type: actionTypes.FETCH_ORDERS_FAILED,
-        errMessage: err.message
+        errMessage: err.response.data.message,
       });
     }
   }

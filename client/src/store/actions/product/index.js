@@ -6,9 +6,9 @@ import * as actionTypes from '../actionTypes';
 export const fetchProducts = () => {
   return async dispatch => {
     dispatch({
-      type: actionTypes.LOADING
+      type: actionTypes.FETCH_PRODUCTS_LOADING,
     });
- 
+    
     try {
       const response = await axios({
         method: 'GET',
@@ -18,12 +18,13 @@ export const fetchProducts = () => {
       const { products } = response.data;
 
       dispatch({
-        type: actionTypes.FETCH_PRODUCTS,
+        type: actionTypes.FETCH_PRODUCTS_SUCCEED,
         products
       });
     } catch (err) {
       dispatch({
-        type: actionTypes.ERROR
+        type: actionTypes.FETCH_PRODUCTS_FAILED,
+        errMessage: err.response.data.message,
       });
     }
   };
@@ -44,7 +45,7 @@ export const sortProducts = (sortBy) => {
       const { products } = response.data;
 
       dispatch({
-        type: actionTypes.FETCH_PRODUCTS,
+        type: actionTypes.FETCH_PRODUCTS_SUCCEED,
         products
       });
     } catch (err) {
@@ -116,7 +117,7 @@ export const fetchProductDetailByid = productId => {
     } catch (err) {
       dispatch({
         type: actionTypes.FETCH_PRODUCT_DETAIL_FAILED,
-        errMessage: err.message,
+        errMessage: err.response.data.message,
       });
     }
   }
@@ -167,7 +168,7 @@ export const fetchProductsByCategory = categoryId => {
       const { products } = response.data.category;
   
       dispatch({
-        type: actionTypes.FETCH_PRODUCTS,
+        type: actionTypes.FETCH_PRODUCTS_SUCCEED,
         products
       });
     } catch (err) {
