@@ -9,7 +9,7 @@ import {
   selectFilteredProducts, 
 } from '../../store/actions/product';
 import { fetchCart } from '../../store/actions/cart';
-import { logOut } from '../../store/actions/auth';
+import { logOut,getUserInfo } from '../../store/actions/auth';
 
 import SideDrawer from './SideDrawer';
 import SearchResults from './SearchResults';
@@ -39,9 +39,15 @@ class Navbar extends Component {
   };
 
   componentDidMount() {
-    const { onFetchCategories, onFetchCart } = this.props
+    const { 
+      onFetchCategories, 
+      onFetchCart, 
+      onGetUserInfo 
+    } = this.props;
+    
     onFetchCategories();
     onFetchCart();
+    onGetUserInfo();
   }
 
   toggleDrawer = isOpen => {
@@ -234,6 +240,7 @@ const mapDispatchToProps = dispatch => ({
   onFetchCart: () => dispatch(fetchCart()),
   onFetchProductsByKeywords: (keywords) => dispatch(fetchProductsByKeywords(keywords)),
   onSelectFilteredProducts: (productId) => dispatch((selectFilteredProducts(productId))),
+  onGetUserInfo: () => dispatch(getUserInfo()),
   onUserLogOut: () => dispatch(logOut()),
 });
 

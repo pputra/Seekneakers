@@ -1,33 +1,16 @@
-import React, { Fragment, Component } from 'react';
-
-import { connect } from 'react-redux';
-import { getUserInfo } from '../../store/actions/auth';
+import React, { Fragment } from 'react';
 
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
-class Root extends Component {
-  componentDidMount() {
-    const { onGetUserInfo } = this.props;
-    onGetUserInfo();
-  }
-
-  render() {
-    const { children } = this.props;
-    return (
-      <Fragment>
+const  Root = props => (
+  <Fragment>
         <Navbar />
           <main style={{marginTop: '100px', minHeight:'500px'}}>
-            {children}
+            {props.children}
           </main>
         <Footer />
-      </Fragment>
-    );
-  }
-}
+  </Fragment>
+);
 
-const mapDispatchToProps = dispatch => ({
-  onGetUserInfo: () => dispatch(getUserInfo()),
-});
-
-export default connect(null, mapDispatchToProps)(Root);
+export default Root;
