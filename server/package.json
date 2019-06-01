@@ -8,7 +8,7 @@
     "test": "STAGE=test nyc mocha --exit"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
