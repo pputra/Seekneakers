@@ -3,9 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { register } from '../../../store/actions/auth';
 
-import Form from './Form';
+import WithLoading from '../../../hoc/WithLoading';
+import FormComponent from './Form';
 import styles from './Form/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
+
+const Form = WithLoading(FormComponent);
 
 class Register extends Component {
   state = {
@@ -45,7 +48,10 @@ class Register extends Component {
       password, 
       passwordRepeat, 
     } = this.state;
-    const { classes } = this.props;
+    const { 
+      classes, 
+      isLoading 
+    } = this.props;
     const inputs = [
       {
         value: firstName,
@@ -81,7 +87,8 @@ class Register extends Component {
 
     return (
       <div>
-        <Form 
+        <Form
+          isLoading={isLoading}
           classes={classes}
           data={inputs}
           handleChange={this.handleUserInput}
@@ -92,6 +99,10 @@ class Register extends Component {
   };
 };
 
+const mapStateToProps = state => ({
+  isLoading: state.userRegisterReducer.loading,
+})
+
 const mapDispatchToProps = dispatch => ({
   onRegister: (
     firstName, lastName, email, password, passwordRepeat) => dispatch(register(
@@ -99,4 +110,4 @@ const mapDispatchToProps = dispatch => ({
     )),
 });
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Register));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Register));

@@ -17,10 +17,13 @@ import {
   voteReview,
 } from '../../store/actions/review';
 
-import ProductDetailCard from '../../components/Cards/ProductDetail';
+import WithLoading from '../../hoc/WithLoading';
+import ProductDetailCardComponent from '../../components/Cards/ProductDetail';
 import ReviewSection from './ReviewSection';
 import styles from './styles';
 import { withStyles } from '@material-ui/core';
+
+const ProductDetailCard = WithLoading(ProductDetailCardComponent);
 
 class ProductDetail extends Component {
   onSubmitReview = () => {
@@ -79,6 +82,7 @@ class ProductDetail extends Component {
   render() {
     const { 
       classes,
+      isProductLoading,
       match: {params: {productId}},
       product,
       addProductToCartById,
@@ -98,7 +102,8 @@ class ProductDetail extends Component {
 
     return (
       <div className={classes.flexContainer}>
-        <ProductDetailCard 
+        <ProductDetailCard
+          isLoading={isProductLoading}
           imageSrc={product.image_src}
           name={product.name}
           price={product.price}
@@ -135,6 +140,7 @@ const mapStateToProps = state => ({
   rating: state.reviewReducer.rating,
   title: state.reviewReducer.title,
   content: state.reviewReducer.content,
+  isProductLoading: state.productDetailReducer.loading,
 
   currEditId: state.reviewReducer.currEditId,
   editTitle: state.reviewReducer.editTitle,

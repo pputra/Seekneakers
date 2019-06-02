@@ -33,7 +33,7 @@ export const fetchProducts = () => {
 export const sortProducts = (sortBy) => {
   return async dispatch => {
     dispatch({
-      type: actionTypes.LOADING
+      type: actionTypes.FETCH_PRODUCTS_LOADING,
     });
 
     try {
@@ -50,7 +50,8 @@ export const sortProducts = (sortBy) => {
       });
     } catch (err) {
       dispatch({
-        type: actionTypes.ERROR
+        type: actionTypes.FETCH_PRODUCTS_FAILED,
+        errMessage: err.response.data.message,
       });
     }
   }

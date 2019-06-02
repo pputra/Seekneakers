@@ -3,9 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { login } from '../../../store/actions/auth';
 
-import Form from './Form';
+import WithLoading from '../../../hoc/WithLoading';
+import FormComponent from './Form';
 import styles from './Form/styles';
 import withStyles from '@material-ui/core/styles/withStyles';
+
+const Form = WithLoading(FormComponent);
 
 class Login extends Component {
   state = {
@@ -30,7 +33,7 @@ class Login extends Component {
   
   render() {
     const { email, password } = this.state;
-    const { classes } = this.props;
+    const { classes, isLoading } = this.props;
     const inputs = [
       {
         value: email,
@@ -48,7 +51,8 @@ class Login extends Component {
 
     return (
       <div>
-        <Form 
+        <Form
+          isLoading={isLoading} 
           classes={classes}
           data={inputs}
           handleChange={this.handleUserInput}
@@ -59,8 +63,12 @@ class Login extends Component {
   };
 };
 
+const mapStateToProps = state => ({
+  isLoading: state.userLoginReducer.loading,
+});
+
 const mapDispatchToProps = dispatch => ({
   onLogin: (email, password) => dispatch(login(email, password)),
 });
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login));

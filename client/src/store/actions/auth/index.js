@@ -2,6 +2,7 @@ import axios from 'axios';
 import history from '../../../history';
 import { DEFAULT_URI } from'../../../config'
 import * as actionTypes from '../actionTypes';
+import { fetchCart } from '../cart';
 
 export const login = (email, password) => {
   return async dispatch => {
@@ -32,6 +33,7 @@ export const login = (email, password) => {
       });
 
       getUserInfo()(dispatch);
+      fetchCart()(dispatch);
       history.push('/');
     } catch (err) {
       dispatch({

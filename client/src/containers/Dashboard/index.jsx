@@ -10,11 +10,14 @@ import {
   addProductToCartById ,
 } from '../../store/actions/cart';
 
+import WithLoading from '../../hoc/WithLoading';
 import SortMenus from './SortMenus';
-import ProductList from './ProductList';
+import ProductListComponent from './ProductList';
 import styles from './styles';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
+
+const ProductList = WithLoading(ProductListComponent);
 
 class Dashboard extends Component {
   state = {
@@ -48,6 +51,7 @@ class Dashboard extends Component {
       products, 
       onProductAddedToCartById, 
       onRestockProductById,
+      isLoading,
     } = this.props;
 
     const sortTypes = [
@@ -86,7 +90,8 @@ class Dashboard extends Component {
             handleCloseSortMenu={this.handleCloseSortMenu}
             sortTypes={sortTypes}
           />
-          <ProductList 
+          <ProductList
+            isLoading={isLoading}
             history={history}
             products={products} 
             handleAddProductToCart={onProductAddedToCartById}
@@ -100,6 +105,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => ({
   products: state.productsReducer.products,
+  isLoading: state.productsReducer.loading,
 });
 
 const mapDispatchToProps = dispatch => ({

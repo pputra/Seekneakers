@@ -9,11 +9,12 @@ import {
   leaveCheckoutPage,
 } from '../../store/actions/checkout';
 import { modifyProductQuantityById } from '../../store/actions/cart';
-import styles from './styles';
-import AddressForm from './Forms/Address';
-import ShippingForm from './Forms/Shipping';
-import ReviewForm from './Forms/Review';
 
+import WithLoading from '../../hoc/WithLoading';
+import styles from './styles';
+import AddressFormComponent from './Forms/Address';
+import ShippingFormComponent from './Forms/Shipping';
+import ReviewFormComponent from './Forms/Review';
 import { 
   Grid, 
   withStyles, 
@@ -23,6 +24,10 @@ import {
   Button, 
   Typography,
 } from '@material-ui/core';
+
+const AddressForm = WithLoading(AddressFormComponent);
+const ShippingForm = WithLoading(ShippingFormComponent);
+const ReviewForm = WithLoading(ReviewFormComponent);
 
 class Checkout extends Component {
   onSubmitAddress = () => {
@@ -130,6 +135,7 @@ class Checkout extends Component {
     const {
       handleCheckoutForm, 
       activeStep,
+      isLoading,
 
       name,
       street,
@@ -151,7 +157,8 @@ class Checkout extends Component {
     switch (activeStep) {
       case 0:
         return (
-          <AddressForm 
+          <AddressForm
+            isLoading={isLoading}
             handleCheckoutForm={handleCheckoutForm}
             name={name}
             street={street}
@@ -166,6 +173,7 @@ class Checkout extends Component {
       case 1:
         return (
           <ShippingForm 
+            isLoading={isLoading}
             availableRates={availableRates} 
             chosenRateIndex={chosenRateIndex}
             handleCheckoutForm={handleCheckoutForm}
@@ -174,6 +182,7 @@ class Checkout extends Component {
       case 2:
         return ( 
           <ReviewForm 
+            isLoading={isLoading}
             name={name}
             street={street}
             city={city}
@@ -192,6 +201,7 @@ class Checkout extends Component {
       default:
         return (
           <AddressForm 
+            isLoading={isLoading}
             handleCheckoutForm={handleCheckoutForm}
             name={name}
             street={street}
@@ -266,8 +276,8 @@ class Checkout extends Component {
                   Back
                 </Button>
                 <Button 
-                  variant="contained" 
-                  color="primary"
+                  variant="outlined" 
+                  
                   onClick={this.handleNext}
                 >
                   {activeStep === steps.length - 1 ? 'Place Order' : 'Next'}
@@ -283,6 +293,7 @@ class Checkout extends Component {
 
 const mapStateToProps = state => ({
   activeStep: state.checkoutReducer.activeStep,
+  isLoading: state.checkoutReducer.loading,
   //address states
   name: state.checkoutReducer.name,
   street: state.checkoutReducer.street,
