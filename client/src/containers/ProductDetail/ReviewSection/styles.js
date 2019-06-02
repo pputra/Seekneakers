@@ -13,6 +13,7 @@ const styles = () => ({
     alignItems:'center', 
     display:'flex', 
     marginTop:'1%',
+    flexDirection:'column',
   },
 });
 

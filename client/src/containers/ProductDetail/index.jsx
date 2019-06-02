@@ -19,11 +19,12 @@ import {
 
 import WithLoading from '../../hoc/WithLoading';
 import ProductDetailCardComponent from '../../components/Cards/ProductDetail';
-import ReviewSection from './ReviewSection';
+import ReviewSectionComponent from './ReviewSection';
 import styles from './styles';
 import { withStyles } from '@material-ui/core';
 
 const ProductDetailCard = WithLoading(ProductDetailCardComponent);
+const ReviewSection = WithLoading(ReviewSectionComponent);
 
 class ProductDetail extends Component {
   onSubmitReview = () => {
@@ -66,6 +67,22 @@ class ProductDetail extends Component {
     editReview(data);
   }
 
+  calculateAvgRating = (reviews) => {
+    if (!reviews) {
+      return;
+    }
+    
+    let sum = 0;
+    let count = 0;
+  
+    reviews.forEach(review => {
+      sum += review.rating;
+      count++;
+    });
+
+    return count === 0 ? "not yet rated" : (sum/count).toFixed(1);
+  }
+
   componentWillUnmount() {
     const { leaveProductDetailPage } = this.props;
     leaveProductDetailPage();
@@ -83,6 +100,7 @@ class ProductDetail extends Component {
     const { 
       classes,
       isProductLoading,
+      isReviewLoading,
       match: {params: {productId}},
       product,
       addProductToCartById,
@@ -108,13 +126,14 @@ class ProductDetail extends Component {
           name={product.name}
           price={product.price}
           stock={product.stock}
-          rating={product.rating}
+          rating={this.calculateAvgRating(product.reviews)}
           description={product.description}
           addProductToCartById={() => addProductToCartById(productId)}
           restockProductById={() => restockProductById(productId, true)}
         />
         <ReviewSection 
           reviews={product.reviews}
+          isLoading={isReviewLoading}
           handleReviewForm={handleReviewForm}
           rating={rating}
           title={title}
@@ -146,6 +165,7 @@ const mapStateToProps = state => ({
   editTitle: state.reviewReducer.editTitle,
   editContent: state.reviewReducer.editContent,
   editRating: state.reviewReducer.editRating,
+  isReviewLoading: state.reviewReducer.loading,
 });
 
 const mapDispatchToProps = dispatch => ({

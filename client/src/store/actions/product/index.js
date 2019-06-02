@@ -132,10 +132,6 @@ export const restockProductById = (productId, isFromDetailPage) => {
       return history.push('/login');
     }
 
-    dispatch({
-      type: actionTypes.LOADING
-    });
-
     try {
       await axios({
         method: 'PATCH',
@@ -152,7 +148,8 @@ export const restockProductById = (productId, isFromDetailPage) => {
       }
     } catch (err) {
       dispatch({
-        type: actionTypes.ERROR
+        type: actionTypes.FETCH_PRODUCTS_FAILED,
+        errMessage: err.response.data.message,
       });
     }
   }

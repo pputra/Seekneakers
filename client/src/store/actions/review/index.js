@@ -75,6 +75,10 @@ export const deleteReview = (reviewId, productId) => {
         url: `${DEFAULT_URI}/review/${reviewId}`
       });
 
+      dispatch({
+        type: actionTypes.SUBMIT_REVIEW_SUCCEED,
+      });
+
       fetchProductDetailByid(productId)(dispatch);
     } catch (err) {
       alert(err.response.data.message);

@@ -1,6 +1,7 @@
 const styles = () => ({
   root: {
     width:'100%',
+    marginBottom: '2%',
   },
   username: {
     display:'flex', 
