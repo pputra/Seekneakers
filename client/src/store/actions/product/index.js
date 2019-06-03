@@ -157,6 +157,10 @@ export const restockProductById = (productId, isFromDetailPage) => {
 
 export const fetchProductsByCategory = categoryId => {
   return async dispatch => {
+    dispatch({
+      type: actionTypes.FETCH_PRODUCTS_LOADING,
+    });
+
     try {
       const response = await axios({
         method: 'GET',
@@ -171,7 +175,8 @@ export const fetchProductsByCategory = categoryId => {
       });
     } catch (err) {
       dispatch({
-        type: actionTypes.ERROR
+        type: actionTypes.FETCH_PRODUCTS_FAILED,
+        errMessage: err.response.data.message,
       });
     }
   }

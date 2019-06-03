@@ -25,6 +25,7 @@ module.exports = {
        newUser = await new User({ first_name, last_name, email, password }).save();
     } catch (err) {
       res.status(400).json({message: createUserErr(err)});
+      return;
     }
 
     try {

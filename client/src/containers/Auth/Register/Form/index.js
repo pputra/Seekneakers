@@ -8,6 +8,15 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
+const passwordRequirements = [
+  'contain an uppercase letter',
+  'contain a special char',
+  'contain a lowercase letter',
+  'contain a digit',
+  'min. length: 5',
+  'example: CopyThis1$'
+];
+
 const RegisterForm = props => {
   const { classes, data, handleChange, handleSubmit } = props;
   
@@ -45,6 +54,14 @@ const RegisterForm = props => {
             Register Here
           </Button>
         </form>
+        <Typography variant="subtitle1">
+            Password must:
+        </Typography>
+        {passwordRequirements.map((requirement) => (
+          <Typography variant="subtitle2">
+            {requirement}
+          </Typography>
+        ))}
       </Paper>
     </main>
   );

@@ -36,6 +36,7 @@ export const login = (email, password) => {
       fetchCart()(dispatch);
       history.push('/');
     } catch (err) {
+      alert(err.response.data.message);
       dispatch({
         type: actionTypes.LOGIN_FAILED,
         errMessage: err.response.data.message,
@@ -69,6 +70,7 @@ export const register = (firstName, lastName, email, password, passwordRepeat) =
       
       history.push('/login');
     } catch (err) {
+      alert(err.response.data.message);
       dispatch({
         type: actionTypes.REGISTER_FAILED
       });
