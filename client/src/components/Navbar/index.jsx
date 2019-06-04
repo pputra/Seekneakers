@@ -29,12 +29,11 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import CartIcon from '@material-ui/icons/ShoppingCart'
-import MoreIcon from '@material-ui/icons/MoreVert';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 class Navbar extends Component {
   state = {
     anchorEl: null,
-    mobileMoreAnchorEl: null,
     openDrawer: false,
   };
 
@@ -75,8 +74,7 @@ class Navbar extends Component {
 
   render() {
     const { 
-      anchorEl, 
-      mobileMoreAnchorEl, 
+      anchorEl,  
       openDrawer,
     } = this.state;
     const { 
@@ -91,8 +89,7 @@ class Navbar extends Component {
     } = this.props;
     const token = localStorage.getItem('token');
     const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+    
     const renderMenu = (
       <Menu
         anchorEl={anchorEl}
@@ -110,32 +107,6 @@ class Navbar extends Component {
           <Link to="/register" style={{ textDecoration: 'none', color:'black' }}>
             Register
           </Link>
-        </MenuItem>
-      </Menu>
-    );
-
-    const renderMobileMenu = (
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={isMobileMenuOpen}
-        onClose={this.handleMobileMenuClose}
-      >
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={this.props.cartTotalQuantity} color="secondary">
-              <CartIcon />
-            </Badge>
-          </IconButton>
-          <p>Cart</p>
-        </MenuItem>
-        <MenuItem onClick={this.handleJoinMenuOpen}>
-          <IconButton color="inherit">
-            <Typography>
-              Join Now
-            </Typography>
-          </IconButton>
         </MenuItem>
       </Menu>
     );
@@ -193,9 +164,7 @@ class Navbar extends Component {
                   onClick={this.handleJoinMenuOpen}
                   color="inherit"
                 >
-                  <Typography variant="h6">
-                    Join Now
-                  </Typography>
+                  <AccountCircleIcon />
                 </IconButton> :
                 <IconButton disabled>
                   <Avatar style={{backgroundColor:'black'}}>
@@ -204,15 +173,9 @@ class Navbar extends Component {
                 </IconButton>
               }
             </div>
-            <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
           </Toolbar>
         </AppBar>
         {renderMenu}
-        {renderMobileMenu}
         <SideDrawer
           openDrawer={openDrawer}
           toggleDrawer={this.toggleDrawer}
