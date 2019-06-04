@@ -11,5 +11,18 @@ module.exports = {
 
     return hasNumber.test(password) && hasSpecialChar.test(password)
       && hasLowercase.test(password) && hasUppercase.test(password);
+  },
+  hasEmptyField: (fields) => {
+    Object.values(fields).forEach(field => {
+      if (field == '') {
+        return false;
+      }
+    });
+    return true;
+  },
+  hasValidRating: (rating) => {
+    const validRating = [1,2,3,4,5];
+
+    return validRating.indexOf(Number(rating)) !== -1;
   }
 };

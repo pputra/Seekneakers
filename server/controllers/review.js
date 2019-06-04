@@ -1,6 +1,7 @@
 const Review = require('../models/Review');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const { hasValidRating } = require('../helpers/validator');
 
 module.exports = {
   create: async (req, res) => {
@@ -11,6 +12,12 @@ module.exports = {
       content,
       rating,
     } = req.body;
+
+    if (!hasValidRating(rating)) {
+      res.status(400).json({
+        message: 'rating must be an integer between 1-5',
+      });
+    }
 
     try {
       const product = await Product.findOne({_id: id}).populate('reviews');

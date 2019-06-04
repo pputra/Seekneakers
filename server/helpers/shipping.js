@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { hasEmptyField } = require('../helpers/validator');
 
 module.exports = {
   getShippingRates: async (req) => {
@@ -12,6 +13,21 @@ module.exports = {
       phone,
       email,
     } = req.body;
+
+    const fields = {
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      phone,
+      email,
+    };
+
+    if (hasEmptyField(fields)) {
+      return [];
+    }
 
     const address_to = {
       name,
@@ -87,7 +103,7 @@ module.exports = {
       return availableRates;
 
     } catch (err) {
-      return err;
+      return [];
     }
   }
 };

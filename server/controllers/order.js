@@ -3,6 +3,7 @@ const Cart = require('../models/Cart');
 const User = require('../models/User');
 const Product = require('../models/Product');
 const { getShippingRates } = require('../helpers/shipping');
+const { hasEmptyField } = require('../helpers/validator');
 
 module.exports = {
   getAll: (req, res) => {
@@ -36,6 +37,23 @@ module.exports = {
       country,
       shippingIndex
     } = req.body;
+
+    const fields ={
+      name,
+      street,
+      city,
+      state,
+      zip,
+      country,
+      shippingIndex
+    }
+
+    if (hasEmptyField(fields)) {
+      res.status(400).json({
+        message: 'all user info must be filled'
+      });
+      return;
+    }
 
     try {
       cart = await Cart.findOne({user_id: userId}).populate('products.product_id');
@@ -110,7 +128,7 @@ module.exports = {
       return res.status(500).json({message: 'Unable to verify shipping options'});
     }
 
-    const chosenRate = availableRates[shippingIndex];
+    const chosenRate = availableRates[Number(shippingIndex)];
     
     try {
       const addedOrder = await Order.create({
@@ -150,7 +168,7 @@ module.exports = {
       })
       
     } catch (err) {
-      res.status(400).json({message: err.message});
+      res.status(400).json({message: 'all user info must be filled'});
     }
   }
 };

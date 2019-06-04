@@ -65,6 +65,7 @@ export const submitShippingAddress = data => {
         availableRates,
       });
     } catch (err) {
+      alert(err.response.data.message);
       dispatch({
         type: actionTypes.SUBMIT_ORDER_FAILED,
       });
@@ -116,6 +117,7 @@ export const submitOrder = data => {
 
       fetchCart()(dispatch);
     } catch (err) {
+      alert(err.response.data.message);
       dispatch({
         type: actionTypes.SUBMIT_ORDER_FAILED,
       });
