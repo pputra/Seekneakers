@@ -15,10 +15,10 @@ module.exports = {
   hasEmptyField: (fields) => {
     Object.values(fields).forEach(field => {
       if (field == '') {
-        return false;
+        return true;
       }
     });
-    return true;
+    return false;
   },
   hasValidRating: (rating) => {
     const validRating = [1,2,3,4,5];
