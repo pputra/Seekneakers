@@ -127,6 +127,7 @@ class Checkout extends Component {
     const onConfirmationPage = activeStep === 3;
 
     if (hasEmptyCart && !onConfirmationPage) {
+      localStorage.getItem('token') && alert("your cart is empty");
       history.push('/');
     }
   }

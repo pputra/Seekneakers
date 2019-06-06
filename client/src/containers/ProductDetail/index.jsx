@@ -83,17 +83,28 @@ class ProductDetail extends Component {
     return count === 0 ? "not yet rated" : (sum/count).toFixed(1);
   }
 
-  componentWillUnmount() {
-    const { leaveProductDetailPage } = this.props;
-    leaveProductDetailPage();
-  }
-
   componentDidMount() {
     const { 
       fetchProductDetailByid,
       match: {params: {productId}}
     } = this.props;
     fetchProductDetailByid(productId);
+  }
+  
+  componentDidUpdate(prevProps) {
+    const { fetchProductDetailByid } = this.props;
+    const prevProductId = prevProps.match.params.productId;
+    const currProductId = this.props.match.params.productId;
+    const shouldUpdatePage = currProductId !== prevProductId;
+
+    if (shouldUpdatePage) {
+      fetchProductDetailByid(currProductId);
+    }
+  }
+
+  componentWillUnmount() {
+    const { leaveProductDetailPage } = this.props;
+    leaveProductDetailPage();
   }
   
   render() {

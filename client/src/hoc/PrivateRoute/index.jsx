@@ -10,7 +10,7 @@ class PrivateRoute extends Component {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      history.push('/');
+      history.push('/login');
       return;
     }
 

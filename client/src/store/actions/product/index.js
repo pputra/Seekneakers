@@ -157,6 +157,8 @@ export const restockProductById = (productId, isFromDetailPage) => {
 
 export const fetchProductsByCategory = categoryId => {
   return async dispatch => {
+    history.push('/');
+    
     dispatch({
       type: actionTypes.FETCH_PRODUCTS_LOADING,
     });
