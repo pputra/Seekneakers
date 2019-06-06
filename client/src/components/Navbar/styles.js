@@ -16,12 +16,23 @@ const styles = theme => ({
   },
   menuButton: {
     marginLeft: -12,
-    marginRight: 20,
+    marginRight: -6,
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: -12,
+      marginRight: 20,
+    },
   },
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
+    },
+  },
+  titleMobile: {
+    display: 'block',
+    marginRight: 5,
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
     },
   },
   search: {
@@ -34,7 +45,7 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing.unit * 2,
+    marginRight: 0,
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -59,7 +70,7 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingLeft: theme.spacing.unit * 7,
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -68,6 +79,7 @@ const styles = theme => ({
   },
   sectionDesktop: {
     display: 'flex',
+    marginRight: -12,
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },

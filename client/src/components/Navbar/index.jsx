@@ -128,6 +128,13 @@ class Navbar extends Component {
                 Seekneakers
               </Link>
             </Typography>
+            <div className={classes.titleMobile} >
+              <Typography variant="h6" color="inherit" noWrap>
+                <Link to="/" style={{ textDecoration: 'none', color:'black' }}>
+                  Home
+                </Link>
+              </Typography>
+            </div>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
