@@ -1,8 +1,12 @@
 const styles = theme => ({
   root: {
-    width: '50%',
+    width: '90%',
     marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
+    [theme.breakpoints.up('md')]: {
+      ...this,
+      width: '50%',
+    },
   },
   table: {
     minWidth: 700,

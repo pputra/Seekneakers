@@ -1,8 +1,12 @@
-const styles = () => ({
+const styles = theme => ({
   card: {
     display: 'flex',
-    width: '500px',
-    height: '200px',
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      ...this,
+      width: '500px',
+      height: '200px',
+    },
   },
   details: {
     display: 'flex',

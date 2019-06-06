@@ -7,10 +7,14 @@ const styles = theme => ({
   },
   reviewContent: {
     display:'flex',
-    width: '25%',
+    width: '90%',
     justifyContent: 'center',
     alignItems:'center',
-    flexDirection:'column'
+    flexDirection:'column',
+    [theme.breakpoints.up('md')]: {
+      ...this,
+      width: '25%',
+    },
   },
   title: {
     margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`,

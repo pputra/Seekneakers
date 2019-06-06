@@ -1,6 +1,9 @@
-const styles = () => ({
+const styles = theme => ({
   card: {
-    width: '40%',
+    width: '90%',
+    [theme.breakpoints.up('md')]: {
+      width: '40%',
+    },
   },
   cardContent: {
     padding:10,

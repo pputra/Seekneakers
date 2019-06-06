@@ -1,4 +1,4 @@
-const styles = () => ({
+const styles = theme => ({
   footer: {
     width: '100%',
     height: '150px',
@@ -15,7 +15,12 @@ const styles = () => ({
     justifyContent:'space-between', 
     alignItems: 'center', 
     display:'flex', 
-    width: '4%',
+    width: '50%',
+
+    [theme.breakpoints.up('md')]: {
+      ...this, 
+      width: '4%',
+    },
   }
 });
 

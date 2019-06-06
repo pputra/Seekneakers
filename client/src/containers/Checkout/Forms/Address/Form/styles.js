@@ -5,7 +5,10 @@ const styles = theme => ({
     alignItems:'center',
   },
   container: {
-    width: '40%',
+    width: '90%',
+    [theme.breakpoints.up('md')]: {
+      width:'40%', 
+    },
   },
   backButton: {
     marginRight: theme.spacing.unit,
