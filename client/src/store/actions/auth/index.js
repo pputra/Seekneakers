@@ -110,6 +110,7 @@ export const getUserInfo = () => {
 
 export const logOut = () => {
   return dispatch => {
+    history.push('/');
     dispatch({
       type: actionTypes.USER_LOGOUT
     });

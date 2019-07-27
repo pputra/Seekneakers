@@ -23,7 +23,7 @@ const styles = (theme) => ({
     marginTop:'1%',
     flexDirection:'column',
 
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: '40%', 
       justifyContent:'center', 
       alignItems:'center', 
