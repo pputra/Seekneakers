@@ -1,67 +1,61 @@
-const User = require('../models/User');
-const Cart = require('../models/Cart');
+const userAction = require('./actions/user.action');
+const { statusCode, errMessage, successMessage } = require('../helpers/httpResponse');
 
-const { encrypt } = require('../helpers/encryption');
-const { createUserErr } = require('../helpers/errCatcher');
-const { generateToken } = require('../helpers/jsonwebtoken');
-
-module.exports = {
-  register: async (req, res) => {
-    const { 
-      first_name, 
-      last_name, 
-      email, 
-      password, 
-      password_repeat 
+const register = async (req, res) => {
+  try {
+    const {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password,
+      password_repeat: passwordRepeat,
     } = req.body;
 
-    if (password !== password_repeat) {
-      return res.status(400).json({message: "passwords don't match"});
-    }
-    
-    let newUser = '';
+    await userAction.create(firstName, lastName,
+      email, password, passwordRepeat);
 
-    try {
-       newUser = await new User({ first_name, last_name, email, password }).save();
-    } catch (err) {
-      res.status(400).json({message: createUserErr(err)});
-      return;
-    }
+    return res.status(statusCode.created).json({
+      message: successMessage.USER_HAS_BEEN_CREATED,
+    });
+  } catch (e) {
+    return res.status(statusCode.badRequest).json({
+      message: e.message,
+    });
+  }
+};
 
-    try {
-      await new Cart({ user_id: newUser._id, total_price: 0 }).save();
-      res.status(200).json({message: 'user has been sucessfully registered'});
-    } catch (err) {
-      await User.deleteOne({ _id: newUser._id});
-      res.status(400).json({message: 'unable to generate a cart for this user'});
-    }
-  },
-  login: (req, res) => {
+const login = async (req, res) => {
+  try {
     const { email, password } = req.body;
+    const result = await userAction.login(email, password);
+    return res.status(statusCode.ok).json({
+      ...result,
+      message: successMessage.LOGIN,
+    });
+  } catch (e) {
+    return res.status(statusCode.badRequest).json({
+      message: e.message,
+    });
+  }
+};
 
-    User.findOne({email: email, password: encrypt(password)}).then((user) => {
-      if (user) {
-        const token = generateToken(user._id, email);
-        res.status(200).json({message: 'user has been sucessfully logged in', token, user_id:user._id });
-      } else {
-        res.status(400).json({message: 'invalid email or password'});
-      }
-    }).catch(() => {
-      res.status(400).json({message: 'invalid email or password'});
-    });
-  },
-  getUserInfo: (req, res) => {
+const getUserInfo = async (req, res) => {
+  try {
     const { userId } = req.decoded;
-    
-    User.findOne({_id: userId}, 'first_name last_name').then((user) => {
-      res.status(200).json({
-        message: 'user info has been fetched',
-        user
-      });
-    }).catch((err) => {
-      res.status(400).json({
-        message: 'invalid token'
-      });
+    const result = await userAction.findUserInfoById(userId);
+    return res.status(statusCode.ok).json({
+      user: result,
+      message: successMessage.FETCH_USER_INFO,
     });
-  },
+  } catch (e) {
+    return res.status(statusCode.unauthorized).json({
+      message: errMessage.INVALID_TOKEN,
+    });
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  getUserInfo,
 };
