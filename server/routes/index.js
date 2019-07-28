@@ -9,7 +9,7 @@ const order = require('./order');
 const shipping = require('./shipping');
 const { isLogin } = require('../middlewares/auth');
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   res.status(200).json('home');
 });
 

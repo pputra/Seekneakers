@@ -19,6 +19,7 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 
 app.listen(port, () => {
+  // eslint-disable-next-line no-console
   console.log(`listening on port ${port}`);
 });
 

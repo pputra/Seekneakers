@@ -1,15 +1,15 @@
 const router = require('express').Router();
-const { 
-  isAdmin, 
-  isLogin, 
+const {
+  isAdmin,
+  isLogin,
 } = require('../middlewares/auth');
-const { 
-  getAll, 
-  getById, 
-  create, 
-  updateById, 
+const {
+  getAll,
+  getById,
+  create,
+  updateById,
   deleteById,
-  restockById, 
+  restockById,
 } = require('../controllers/product');
 
 router.get('/', getAll);

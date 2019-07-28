@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const { isAdmin } = require('../middlewares/auth');
-const { getAll, getById, create, updateById, deleteById } = require('../controllers/category');
+const {
+  getAll, getById, create, updateById, deleteById,
+} = require('../controllers/category');
 
 router.get('/', getAll);
 router.get('/:id', getById);
