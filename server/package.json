@@ -5,7 +5,7 @@
   "scripts": {
     "prod": "STAGE=production nodemon app.js",
     "dev": "STAGE=development nodemon app.js",
-    "test": "STAGE=test nyc mocha --exit"
+    "test": "STAGE=test ./node_modules/mocha/bin/mocha --exit"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -18,8 +18,11 @@
     "morgan": "~1.9.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.18.2"
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.0",
+    "supertest": "^4.0.2"
   }
 }

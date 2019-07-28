@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 
 module.exports = {
   connect: () => {
-    let db_url = '';
+    let dbUrl = '';
     if (process.env.STAGE === 'production') {
-      db_url = process.env.DB_URL_PRODUCTION;
-    } else if (process.env.STAGE === 'testing') {
-      db_url = process.env.DB_URL_TESTING;
+      dbUrl = process.env.DB_URL_PRODUCTION;
+    } else if (process.env.STAGE === 'test') {
+      dbUrl = process.env.DB_URL_TESTING;
     } else {
-      db_url = process.env.DB_URL_DEVELOPMENT;
+      dbUrl = process.env.DB_URL_DEVELOPMENT;
     }
 
-    mongoose.connect(db_url, {useNewUrlParser: true, useCreateIndex: true});
+    mongoose.connect(dbUrl, { useNewUrlParser: true, useCreateIndex: true });
   },
 };

@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
-const User = require('../../models/User');
-const Cart = require('../../models/Cart');
-const { errMessage } = require('../../helpers/httpResponse');
-const { createUserErr } = require('../../helpers/errCatcher');
-const { encrypt } = require('../../helpers/encryption');
-const { generateToken } = require('../../helpers/jsonwebtoken');
+const User = require('../models/User');
+const Cart = require('../models/Cart');
+const { errMessage } = require('../helpers/httpResponse');
+const { createUserErr } = require('../helpers/errCatcher');
+const { encrypt } = require('../helpers/encryption');
+const { generateToken } = require('../helpers/jsonwebtoken');
 
 const create = (firstName, lastName, email,
   password, passwordRepeat) => new Promise(async (resolve, reject) => {

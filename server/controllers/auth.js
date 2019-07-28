@@ -1,4 +1,4 @@
-const userAction = require('./actions/user.action');
+const userAction = require('../actions/user.action');
 const { statusCode, errMessage, successMessage } = require('../helpers/httpResponse');
 
 const register = async (req, res) => {
