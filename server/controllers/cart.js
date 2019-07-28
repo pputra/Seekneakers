@@ -1,211 +1,75 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
-const Cart = require('../models/Cart');
-const Product = require('../models/Product');
+const cartAction = require('../actions/cart.action');
+const { statusCode, successMessage } = require('../helpers/httpResponse');
 
 module.exports = {
   getCart: async (req, res) => {
     const { userId } = req.decoded;
 
     try {
-      const cart = await Cart.findOne({ user_id: userId }).populate('products.product_id');
-
-      if (!cart) {
-        return res.status(401).json({ message: 'user is not authorized to access the cart' });
-      }
-
-      const { products } = cart;
-      let updatedTotalPrice = 0;
-
-      products.forEach((product) => {
-        const { product_id: { price }, quantity } = product;
-        product.price = price;
-        updatedTotalPrice += price * quantity;
+      const cart = await cartAction.getByUserId(userId);
+      return res.status(statusCode.ok).json({
+        cart,
+        message: successMessage.FETCH_CART,
       });
-
-      cart.total_price = updatedTotalPrice;
-
-      await cart.save();
-      return res.status(200).json({ message: 'cart has been fetched successfully', cart });
-    } catch (err) {
-      return res.status(401).json({ message: err.message });
+    } catch (e) {
+      return res.status(statusCode.forbidden).json({
+        message: e.message,
+      });
     }
   },
   addProduct: async (req, res) => {
     const { userId } = req.decoded;
     const { id } = req.params;
-    let cart;
 
     try {
-      cart = await Cart.findOne({ user_id: userId }).populate('products.product_id');
+      await cartAction.addProduct(userId, id);
 
-      if (!cart) {
-        return res.status(401).json({ message: 'user is not authorized to access the cart' });
-      }
-    } catch (err) {
-      return res.status(401).json({ message: err.message });
+      return res.status(statusCode.ok).json({
+        message: successMessage.ADD_PRODUCT_TO_CART,
+      });
+    } catch (e) {
+      return res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
     }
-
-    const { products } = cart;
-    let updatedTotalPrice = 0;
-
-    products.forEach((product) => {
-      const { product_id: { price }, quantity } = product;
-      product.price = price;
-      updatedTotalPrice += price * quantity;
-    });
-
-    cart.total_price = updatedTotalPrice;
-
-    await cart.save();
-
-    const productIndex = products.findIndex(product => (product.product_id._id == id));
-
-    if (productIndex === -1) {
-      let newProductPrice;
-      let newProductStock;
-      try {
-        const productToAdd = await Product.findOne({ _id: id });
-        newProductPrice = productToAdd.price;
-        newProductStock = productToAdd.stock;
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
-      if (newProductStock <= 0) {
-        return res.status(400).json({ message: 'product is out of stock' });
-      }
-
-      cart.products.push({ product_id: id, quantity: 1, price: newProductPrice });
-
-      cart.total_price += newProductPrice;
-    } else {
-      if (products[productIndex].product_id.stock <= products[productIndex].quantity) {
-        return res.status(400).json({ message: 'unable to exceed stock capacity' });
-      }
-
-      products[productIndex].quantity += 1;
-
-      cart.total_price += products[productIndex].price;
-    }
-    await cart.save();
-
-    return res.status(200).json({ message: 'product has been added to the cart' });
   },
   modifyQuantity: async (req, res) => {
     const { userId } = req.decoded;
     const { id } = req.params;
     const { newQuantity } = req.body;
-    let cart;
 
     try {
-      cart = await Cart.findOne({ user_id: userId }).populate('products.product_id');
-
-      if (!cart) {
-        return res.status(401).json({ message: 'user is not authorized to access the cart' });
-      }
-    } catch (err) {
-      return res.status(401).json({ message: err.message });
-    }
-
-    const { products } = cart;
-    let updatedTotalPrice = 0;
-
-    products.forEach((product) => {
-      const { product_id: { price }, quantity } = product;
-      product.price = price;
-      updatedTotalPrice += price * quantity;
-    });
-
-    cart.total_price = updatedTotalPrice;
-
-    await cart.save();
-
-    const productIndex = cart.products.findIndex(product => (product.product_id._id == id));
-    const prevQuantity = cart.products[productIndex].quantity;
-    const { price, stock } = cart.products[productIndex].product_id;
-
-    if (newQuantity <= 0 || newQuantity > stock) {
-      return res.status(400).json({ message: 'invalid product quantity' });
-    }
-
-    try {
-      await Cart.updateOne({
-        user_id: userId,
-        'products.product_id': id,
-      }, {
-        $set: {
-          'products.$.quantity': newQuantity,
-        },
-        total_price: cart.total_price - (price * prevQuantity) + (price * newQuantity),
+      await cartAction.modifyQuantity(userId, id, newQuantity);
+      return res.status(200).json({
+        message: successMessage.ADD_PRODUCT_TO_CART,
       });
-    } catch (err) {
-      return res.status(400).json({ message: err.message });
+    } catch (e) {
+      return res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
     }
-
-    return res.status(200).json({ message: 'cart has been updated' });
   },
   removeProduct: async (req, res) => {
     const { userId } = req.decoded;
     const { id } = req.params;
     const { empty_cart: emptyCart } = req.query;
-    let cart;
 
     try {
-      cart = await Cart.findOne({ user_id: userId }).populate('products.product_id');
-
-      if (!cart) {
-        return res.status(401).json({ message: 'user is not authorized to access the cart' });
+      if (emptyCart === 'true') {
+        await cartAction.emptyCart(userId);
+      } else {
+        await cartAction.removeProduct(userId, id);
       }
-    } catch (err) {
-      return res.status(401).json({ message: err.message });
-    }
-
-    if (emptyCart === 'true') {
-      cart.products = [];
-
-      await cart.save();
-
-      return res.status(200).json({ message: 'cart has been emptied' });
-    }
-
-    const { products } = cart;
-    let updatedTotalPrice = 0;
-
-    products.forEach((product) => {
-      const { product_id: { price }, quantity } = product;
-      product.price = price;
-      updatedTotalPrice += price * quantity;
-    });
-
-    cart.total_price = updatedTotalPrice;
-
-    await cart.save();
-
-    const productIndex = products.findIndex(product => (product.product_id._id == id));
-
-    if (productIndex === -1) {
-      return res.status(400).json({ message: 'unable to locate the product' });
-    }
-
-    const prevPrice = cart.products[productIndex].price;
-    const prevQuantity = cart.products[productIndex].quantity;
-
-    try {
-      await Cart.updateOne({
-        user_id: userId,
-      }, {
-        $pull: {
-          products: {
-            product_id: id,
-          },
-        },
-        total_price: cart.total_price - prevPrice * prevQuantity,
+      return res.status(statusCode.ok).json({
+        message: successMessage.UPDATE_PRODUCT_QUANTITY_IN_CART,
       });
-
-      return res.status(200).json({ message: 'cart has been updated' });
-    } catch (err) {
-      return res.status(401).json({ message: err.message });
+    } catch (e) {
+      return res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
     }
   },
 };
