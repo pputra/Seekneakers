@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 module.exports = {
   hasValidEmail: (email) => {
     const validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -13,16 +14,17 @@ module.exports = {
       && hasLowercase.test(password) && hasUppercase.test(password);
   },
   hasEmptyField: (fields) => {
-    Object.values(fields).forEach(field => {
-      if (field == '') {
-        return true;
+    let hasEmptyField = false;
+    Object.values(fields).forEach((field) => {
+      if (field === '') {
+        hasEmptyField = true;
       }
     });
-    return false;
+    return hasEmptyField;
   },
   hasValidRating: (rating) => {
-    const validRating = [1,2,3,4,5];
+    const validRating = [1, 2, 3, 4, 5];
 
     return validRating.indexOf(Number(rating)) !== -1;
-  }
+  },
 };

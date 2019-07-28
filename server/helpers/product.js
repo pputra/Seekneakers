@@ -30,19 +30,19 @@ module.exports = {
         products.sort((prod1, prod2) => (
           module.exports.calculateRating(prod2) - module.exports.calculateRating(prod1)
         ));
+        break;
       default:
-        return;
     }
   },
   calculateRating: (product) => {
     let sum = 0;
     let count = 0;
-  
-    product.reviews.forEach(review => {
+
+    product.reviews.forEach((review) => {
       sum += review.rating;
-      count++;
+      count += 1;
     });
 
-    return count === 0 ? 0 : sum/count;
+    return count === 0 ? 0 : sum / count;
   },
 };

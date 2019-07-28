@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-underscore-dangle */
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const User = require('../models/User');
@@ -8,21 +10,22 @@ const { hasEmptyField } = require('../helpers/validator');
 module.exports = {
   getAll: (req, res) => {
     const { userId } = req.decoded;
-    
-    User.findOne({_id: userId}).populate({
-      path:'orders',
-      model:"Order",
-      populate:[{
-          path:"products",
-     },
-     {
-          path: "products.product_id",
-          model:"Product",
-     }]}).then((user) => {
+
+    User.findOne({ _id: userId }).populate({
+      path: 'orders',
+      model: 'Order',
+      populate: [{
+        path: 'products',
+      },
+      {
+        path: 'products.product_id',
+        model: 'Product',
+      }],
+    }).then((user) => {
       const orders = user.orders.reverse();
-      res.status(200).json({message: 'Orders have been fetched successfully', orders});
-    }).catch((err) => {
-      res.status(401).json({message: 'You are not authorized to access this content'});
+      res.status(200).json({ message: 'Orders have been fetched successfully', orders });
+    }).catch(() => {
+      res.status(401).json({ message: 'You are not authorized to access this content' });
     });
   },
   create: async (req, res) => {
@@ -35,101 +38,108 @@ module.exports = {
       state,
       zip,
       country,
-      shippingIndex
+      shippingIndex,
     } = req.body;
 
-    const fields ={
+    const fields = {
       name,
       street,
       city,
       state,
       zip,
       country,
-      shippingIndex
-    }
+      shippingIndex,
+    };
 
     if (hasEmptyField(fields)) {
       res.status(400).json({
-        message: 'all user info must be filled'
+        message: 'all user info must be filled',
       });
       return;
     }
 
     try {
-      cart = await Cart.findOne({user_id: userId}).populate('products.product_id');
+      cart = await Cart.findOne({ user_id: userId }).populate('products.product_id');
     } catch (error) {
-      res.status(401).json({message: 'You are not authorized to access this content'});
+      res.status(401).json({ message: 'You are not authorized to access this content' });
     }
 
-    const emptyCart = cart.products.length == 0;
+    const emptyCart = cart.products.length === 0;
 
     if (emptyCart) {
-      res.status(400).json({message: 'cart is empty'});
+      res.status(400).json({ message: 'cart is empty' });
     }
 
     const { products } = cart;
     let totalPrice = 0;
 
-    let orderedProducts = [];
+    const orderedProducts = [];
 
-    for (product of products) {
-      const { product_id : {price}, quantity} = product;
-      
-      let addedProduct = {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const product of products) {
+      const { product_id: { price }, quantity } = product;
+
+      const addedProduct = {
         product_id: product.product_id._id,
-        price
+        price,
       };
 
       const currStock = product.product_id.stock;
 
       if (currStock === 0) {
+        // eslint-disable-next-line no-continue
         continue;
       }
 
       if (quantity >= currStock) {
         addedProduct.quantity = currStock;
-        
+
         try {
-          await Product.updateOne({_id: product.product_id._id}, {stock: 0, $inc: {purchased: currStock}});
+          await Product.updateOne({ _id: product.product_id._id },
+            { stock: 0, $inc: { purchased: currStock } });
           totalPrice += currStock * price;
         } catch (err) {
-          return res.status(400).json({message: err.message});
+          // eslint-disable-next-line consistent-return
+          return res.status(400).json({ message: err.message });
         }
       } else {
         const updatedStock = currStock - quantity;
         addedProduct.quantity = quantity;
 
         try {
-          await Product.updateOne({_id: product.product_id._id}, {
-            stock: updatedStock, 
+          await Product.updateOne({ _id: product.product_id._id }, {
+            stock: updatedStock,
             $inc: {
-              purchased: quantity
-            }
-            });
+              purchased: quantity,
+            },
+          });
 
-            totalPrice += quantity * price;
+          totalPrice += quantity * price;
         } catch (err) {
-          return res.status(400).json({message: err.message});
+          // eslint-disable-next-line consistent-return
+          return res.status(400).json({ message: err.message });
         }
       }
-      
+
       orderedProducts.push(addedProduct);
     }
 
     const productsOutOfStock = orderedProducts.length === 0;
 
     if (productsOutOfStock) {
-      return res.status(400).json({message: 'Products are out of stock'});
+      // eslint-disable-next-line consistent-return
+      return res.status(400).json({ message: 'Products are out of stock' });
     }
 
     const availableRates = await getShippingRates(req);
 
     if (!availableRates || availableRates.length === 0) {
-      return res.status(500).json({message: 'Unable to verify shipping options'});
+      // eslint-disable-next-line consistent-return
+      return res.status(500).json({ message: 'Unable to verify shipping options' });
     }
 
     const chosenRate = availableRates[Number(shippingIndex)];
-    
+
     try {
       const addedOrder = await Order.create({
         customer: {
@@ -143,7 +153,7 @@ module.exports = {
           zip,
           country,
         },
-        products:orderedProducts,
+        products: orderedProducts,
         courier: {
           provider: chosenRate.provider,
           service_name: chosenRate.name,
@@ -152,10 +162,10 @@ module.exports = {
         total_price: totalPrice + Number(chosenRate.price),
       });
 
-      await User.updateOne({_id: userId}, {
+      await User.updateOne({ _id: userId }, {
         $push: {
           orders: addedOrder._id,
-        }
+        },
       });
 
       cart.products = [];
@@ -165,10 +175,9 @@ module.exports = {
       res.status(200).json({
         message: 'Your order has been placed',
         order: addedOrder,
-      })
-      
+      });
     } catch (err) {
-      res.status(400).json({message: 'all user info must be filled'});
+      res.status(400).json({ message: 'all user info must be filled' });
     }
-  }
+  },
 };
