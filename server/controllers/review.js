@@ -175,8 +175,8 @@ module.exports = {
       });
     }
 
-    const prevLikeIndex = review.likes.findIndex(() => (
-      id == userId
+    const prevLikeIndex = review.likes.findIndex(el => (
+      el == userId
     ));
 
     if (prevLikeIndex !== -1) {
@@ -196,8 +196,8 @@ module.exports = {
       return;
     }
 
-    const dislikeIndexToRemove = review.dislikes.findIndex(() => (
-      id == userId
+    const dislikeIndexToRemove = review.dislikes.findIndex(el => (
+      el == userId
     ));
 
     if (dislikeIndexToRemove !== -1) {
@@ -238,8 +238,8 @@ module.exports = {
       });
     }
 
-    const prevDislikeIndex = review.dislikes.findIndex(() => (
-      id == userId
+    const prevDislikeIndex = review.dislikes.findIndex(el => (
+      el == userId
     ));
 
     if (prevDislikeIndex !== -1) {
@@ -259,8 +259,8 @@ module.exports = {
       return;
     }
 
-    const likeIndexToRemove = review.likes.findIndex(() => (
-      id == userId
+    const likeIndexToRemove = review.likes.findIndex(el => (
+      el == userId
     ));
 
     if (likeIndexToRemove !== -1) {
