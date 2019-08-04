@@ -30,6 +30,11 @@ const successMessage = {
   CREATE_PRODUCT: 'product has been added',
   UPDATE_PRODUCT_BY_ID: id => (`product with id: ${id} has been updated`),
   REMOVE_PRODUCT_BY_ID: id => (`product with id: ${id} has been removed`),
+  // address actions
+  CREATE_ADDRESS: 'address has been added',
+  FETCH_ADDRESS: 'address has been fetched',
+  UPDATE_ADDRESS_BY_ID: id => (`address with id: ${id} has been updated`),
+  REMOVE_ADDRESS_BY_ID: id => (`address with id: ${id} has been removed`),
 };
 
 const errMessage = {
@@ -49,6 +54,9 @@ const errMessage = {
   // product actions,
   FETCH_PRODUCTS: 'unable to fetch products',
   FETCH_PRODUCT: 'unable to fetch the product',
+  FETCH_ADDRESS_UNAUTHORIZED: 'user is not authorized to access the address',
+  UPDATE_ADDRESS_UNAUTHORIZED: 'User is not authorized to update the address',
+  REMOVE_ADDRESS_UNAUTHORIZED: 'user is not authorized to remove the address',
 };
 
 module.exports = {
