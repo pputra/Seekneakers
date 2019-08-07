@@ -35,6 +35,8 @@ const successMessage = {
   FETCH_ADDRESS: 'address has been fetched',
   UPDATE_ADDRESS_BY_ID: id => (`address with id: ${id} has been updated`),
   REMOVE_ADDRESS_BY_ID: id => (`address with id: ${id} has been removed`),
+  // shipping actions
+  FETCH_SHIPPING_RATES: 'shipping rates has been fetched successfully',
 };
 
 const errMessage = {
@@ -57,6 +59,8 @@ const errMessage = {
   FETCH_ADDRESS_UNAUTHORIZED: 'user is not authorized to access the address',
   UPDATE_ADDRESS_UNAUTHORIZED: 'User is not authorized to update the address',
   REMOVE_ADDRESS_UNAUTHORIZED: 'user is not authorized to remove the address',
+  // shipping actions
+  FETCH_SHIPPING_RATES: 'invalid shipping info',
 };
 
 module.exports = {

@@ -1,16 +1,31 @@
-const { getShippingRates } = require('../helpers/shipping');
+const { statusCode, successMessage } = require('../helpers/httpResponse');
+const shippingAction = require('../actions/shipping.action');
 
 module.exports = {
   getOptions: async (req, res) => {
-    const availableRates = await getShippingRates(req);
+    try {
+      const {
+        name,
+        street,
+        city,
+        state,
+        zip,
+        country,
+        phone,
+        email,
+      } = req.body;
 
-    if (!availableRates || availableRates.length === 0) {
-      return res.status(400).json({ message: 'invalid shipping info' });
+      const availableRates = await shippingAction.getRates(name, street, city, state,
+        zip, country, phone, email);
+
+      res.status(statusCode.ok).json({
+        message: successMessage.FETCH_SHIPPING_RATES,
+        availableRates,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
     }
-
-    return res.status(200).json({
-      message: 'rate has been fetched successfully',
-      availableRates,
-    });
   },
 };
