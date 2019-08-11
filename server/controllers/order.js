@@ -1,183 +1,62 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
-const Order = require('../models/Order');
-const Cart = require('../models/Cart');
-const User = require('../models/User');
-const Product = require('../models/Product');
-const { getShippingRates } = require('../helpers/shipping');
+const orderAction = require('../actions/order.action');
+
 const { hasEmptyField } = require('../helpers/validator');
+const { statusCode, successMessage, errMessage } = require('../helpers/httpResponse');
 
 module.exports = {
-  getAll: (req, res) => {
+  getAll: async (req, res) => {
     const { userId } = req.decoded;
 
-    User.findOne({ _id: userId }).populate({
-      path: 'orders',
-      model: 'Order',
-      populate: [{
-        path: 'products',
-      },
-      {
-        path: 'products.product_id',
-        model: 'Product',
-      }],
-    }).then((user) => {
-      const orders = user.orders.reverse();
-      res.status(200).json({ message: 'Orders have been fetched successfully', orders });
-    }).catch(() => {
-      res.status(401).json({ message: 'You are not authorized to access this content' });
-    });
+    try {
+      const orders = await orderAction.getAll(userId);
+
+      res.status(statusCode.ok).json({
+        message: successMessage.FETCH_ORDER_HISTORY,
+        orders,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
+    }
   },
   create: async (req, res) => {
-    const { userId } = req.decoded;
-    let cart;
-    const {
-      name,
-      street,
-      city,
-      state,
-      zip,
-      country,
-      shippingIndex,
-    } = req.body;
-
-    const fields = {
-      name,
-      street,
-      city,
-      state,
-      zip,
-      country,
-      shippingIndex,
-    };
-
-    if (hasEmptyField(fields)) {
-      res.status(400).json({
-        message: 'all user info must be filled',
-      });
-      return;
-    }
-
     try {
-      cart = await Cart.findOne({ user_id: userId }).populate('products.product_id');
-    } catch (error) {
-      res.status(401).json({ message: 'You are not authorized to access this content' });
-    }
+      const { userId } = req.decoded;
+      const { chosenRate, productsToCheckout } = req;
+      const {
+        name,
+        street,
+        city,
+        state,
+        zip,
+        country,
+      } = req.body;
 
-    const emptyCart = cart.products.length === 0;
-
-    if (emptyCart) {
-      res.status(400).json({ message: 'cart is empty' });
-    }
-
-    const { products } = cart;
-    let totalPrice = 0;
-
-    const orderedProducts = [];
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const product of products) {
-      const { product_id: { price }, quantity } = product;
-
-      const addedProduct = {
-        product_id: product.product_id._id,
-        price,
+      const fields = {
+        name,
+        street,
+        city,
+        state,
+        zip,
+        country,
       };
 
-      const currStock = product.product_id.stock;
-
-      if (currStock === 0) {
-        // eslint-disable-next-line no-continue
-        continue;
+      if (hasEmptyField(fields)) {
+        throw new Error(errMessage.USER_HAS_EMPTY_INFO);
       }
 
-      if (quantity >= currStock) {
-        addedProduct.quantity = currStock;
-
-        try {
-          await Product.updateOne({ _id: product.product_id._id },
-            { stock: 0, $inc: { purchased: currStock } });
-          totalPrice += currStock * price;
-        } catch (err) {
-          // eslint-disable-next-line consistent-return
-          return res.status(400).json({ message: err.message });
-        }
-      } else {
-        const updatedStock = currStock - quantity;
-        addedProduct.quantity = quantity;
-
-        try {
-          await Product.updateOne({ _id: product.product_id._id }, {
-            stock: updatedStock,
-            $inc: {
-              purchased: quantity,
-            },
-          });
-
-          totalPrice += quantity * price;
-        } catch (err) {
-          // eslint-disable-next-line consistent-return
-          return res.status(400).json({ message: err.message });
-        }
-      }
-
-      orderedProducts.push(addedProduct);
-    }
-
-    const productsOutOfStock = orderedProducts.length === 0;
-
-    if (productsOutOfStock) {
-      // eslint-disable-next-line consistent-return
-      return res.status(400).json({ message: 'Products are out of stock' });
-    }
-
-    const availableRates = await getShippingRates(req);
-
-    if (!availableRates || availableRates.length === 0) {
-      // eslint-disable-next-line consistent-return
-      return res.status(500).json({ message: 'Unable to verify shipping options' });
-    }
-
-    const chosenRate = availableRates[Number(shippingIndex)];
-
-    try {
-      const addedOrder = await Order.create({
-        customer: {
-          user_id: userId,
-          name,
-        },
-        address: {
-          street,
-          city,
-          state,
-          zip,
-          country,
-        },
-        products: orderedProducts,
-        courier: {
-          provider: chosenRate.provider,
-          service_name: chosenRate.name,
-          price: chosenRate.price,
-        },
-        total_price: totalPrice + Number(chosenRate.price),
+      await orderAction
+        .create(userId, name, street, city, state, zip, country, productsToCheckout, chosenRate);
+      res.status(statusCode.created).json({
+        message: successMessage.PLACE_ORDER,
       });
-
-      await User.updateOne({ _id: userId }, {
-        $push: {
-          orders: addedOrder._id,
-        },
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
       });
-
-      cart.products = [];
-
-      await cart.save();
-
-      res.status(200).json({
-        message: 'Your order has been placed',
-        order: addedOrder,
-      });
-    } catch (err) {
-      res.status(400).json({ message: 'all user info must be filled' });
     }
   },
 };

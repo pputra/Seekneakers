@@ -43,6 +43,9 @@ const successMessage = {
   REMOVE_REVIEW_BY_ID: id => (`review with id: ${id} has been removed`),
   LIKE_REVIEW_BY_ID: id => (`like review with id: ${id} has been toggled`),
   DISLIKE_REVIEW_BY_ID: id => (`dislike review with id: ${id} has been toggled`),
+  // order actions
+  FETCH_ORDER_HISTORY: 'orders have been fetched successfully',
+  PLACE_ORDER: 'your order has been placed',
 };
 
 const errMessage = {
@@ -73,6 +76,9 @@ const errMessage = {
   USER_HAS_NOT_PURCHASED_PRODUCT: 'user has not purchased this product',
   USER_HAS_REVIEWED_THE_PRODUCT: 'user has reviewed this product before',
   USER_UNAUTHORIZED_TO_UPDATE_THE_REVIEW: 'user is not authorized to update the review',
+  USER_HAS_EMPTY_CART_TO_CHECKOUT: 'unable to proccess order: cart is empty',
+  // order actions
+  USER_HAS_EMPTY_INFO: 'all user info must be filled',
 };
 
 module.exports = {

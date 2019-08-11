@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 const Product = require('../models/Product');
 const Category = require('../models/Category');
@@ -109,6 +110,58 @@ const deleteById = productId => new Promise(async (resolve, reject) => {
   }
 });
 
+const getProductsInStock = products => new Promise(async (resolve, reject) => {
+  try {
+    let totalPrice = 0;
+    const productsInStock = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const product of products) {
+      const { product_id: { price }, quantity } = product;
+
+      const addedProduct = {
+        product_id: product.product_id._id,
+        price,
+      };
+
+      const currStock = product.product_id.stock;
+
+      if (currStock === 0) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      if (quantity >= currStock) {
+        addedProduct.quantity = currStock;
+
+        await Product.updateOne({ _id: product.product_id._id },
+          { stock: 0, $inc: { purchased: currStock } });
+        totalPrice += currStock * price;
+      } else {
+        const updatedStock = currStock - quantity;
+        addedProduct.quantity = quantity;
+
+        await Product.updateOne({ _id: product.product_id._id }, {
+          stock: updatedStock,
+          $inc: {
+            purchased: quantity,
+          },
+        });
+
+        totalPrice += quantity * price;
+      }
+
+      productsInStock.push(addedProduct);
+    }
+    return resolve({
+      totalPrice,
+      productsInStock,
+    });
+  } catch (e) {
+    return reject(e);
+  }
+});
+
 module.exports = {
   getAll,
   getByKeywords,
@@ -117,4 +170,5 @@ module.exports = {
   create,
   updateById,
   deleteById,
+  getProductsInStock,
 };
