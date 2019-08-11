@@ -8,6 +8,7 @@
     "test": "STAGE=test ./node_modules/mocha/bin/mocha --exit"
   },
   "dependencies": {
+    "amqplib": "^0.5.5",
     "axios": "^0.19.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
