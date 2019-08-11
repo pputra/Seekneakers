@@ -3,8 +3,8 @@ const supertest = require('supertest');
 const { assert } = require('chai');
 const app = require('../app');
 
-const User = require('../models/User');
-const Cart = require('../models/Cart');
+const User = require('../db/models/User');
+const Cart = require('../db/models/Cart');
 
 const server = supertest(app);
 

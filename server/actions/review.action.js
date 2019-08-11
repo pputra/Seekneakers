@@ -1,7 +1,7 @@
 /* eslint-disable eqeqeq */
-const Review = require('../models/Review');
-const Order = require('../models/Order');
-const Product = require('../models/Product');
+const Review = require('../db/models/Review');
+const Order = require('../db/models/Order');
+const Product = require('../db/models/Product');
 const { hasValidRating } = require('../helpers/validator');
 const { errMessage } = require('../helpers/httpResponse');
 

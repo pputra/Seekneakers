@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable eqeqeq */
-const Cart = require('../models/Cart');
-const Product = require('../models/Product');
+const Cart = require('../db/models/Cart');
+const Product = require('../db/models/Product');
 const { errMessage } = require('../helpers/httpResponse');
 
 const updateProductPriceInCart = cart => new Promise(async (resolve, reject) => {

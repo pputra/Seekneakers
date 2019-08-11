@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-const Address = require('../models/Address');
-const User = require('../models/User');
+const Address = require('../db/models/Address');
+const User = require('../db/models/User');
 const { errMessage } = require('../helpers/httpResponse');
 
 const create = (userId, street, city, state,

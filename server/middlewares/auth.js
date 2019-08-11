@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../db/models/User');
 const { hasValidToken } = require('../helpers/jsonwebtoken');
 
 module.exports = {

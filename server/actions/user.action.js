@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-const User = require('../models/User');
-const Cart = require('../models/Cart');
+const User = require('../db/models/User');
+const Cart = require('../db/models/Cart');
 const { errMessage } = require('../helpers/httpResponse');
 const { createUserErr } = require('../helpers/errCatcher');
 const { encrypt } = require('../helpers/encryption');

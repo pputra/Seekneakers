@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-await-in-loop */
-const Order = require('../models/Order');
-const User = require('../models/User');
+const Order = require('../db/models/Order');
+const User = require('../db/models/User');
 
 const productAction = require('./product.action');
 const cartAction = require('./cart.action');

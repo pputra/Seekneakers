@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
-const Product = require('../models/Product');
-const Category = require('../models/Category');
+const Product = require('../db/models/Product');
+const Category = require('../db/models/Category');
 
 const getAll = () => new Promise(async (resolve, reject) => {
   try {

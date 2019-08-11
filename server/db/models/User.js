@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const { encrypt } = require('../helpers/encryption');
-const { hasValidEmail, hasValidPassword } = require('../helpers/validator');
+const { encrypt } = require('../../helpers/encryption');
+const { hasValidEmail, hasValidPassword } = require('../../helpers/validator');
 
 const UserSchema = new Schema({
   first_name: { type: String, required: [true, 'first name is required'] },
