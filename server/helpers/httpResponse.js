@@ -79,6 +79,8 @@ const errMessage = {
   USER_HAS_EMPTY_CART_TO_CHECKOUT: 'unable to proccess order: cart is empty',
   // order actions
   USER_HAS_EMPTY_INFO: 'all user info must be filled',
+  // rabbitmq
+  FAILED_QUEUE_CONNECTION: 'unable to establish a connection to the server, please try again later',
 };
 
 module.exports = {

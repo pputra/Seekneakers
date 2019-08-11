@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 const orderAction = require('../actions/order.action');
+const orderQueue = require('../lib/rabbitMQ/publishers/order.publish');
 
 const { hasEmptyField } = require('../helpers/validator');
 const { statusCode, successMessage, errMessage } = require('../helpers/httpResponse');
@@ -48,8 +49,9 @@ module.exports = {
         throw new Error(errMessage.USER_HAS_EMPTY_INFO);
       }
 
-      await orderAction
-        .create(userId, name, street, city, state, zip, country, productsToCheckout, chosenRate);
+      orderQueue
+        .publish(userId, name, street, city, state, zip, country, productsToCheckout, chosenRate);
+
       res.status(statusCode.created).json({
         message: successMessage.PLACE_ORDER,
       });
