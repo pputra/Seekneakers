@@ -1,283 +1,92 @@
 /* eslint-disable eqeqeq */
-const Review = require('../models/Review');
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const { hasValidRating } = require('../helpers/validator');
+const reviewAction = require('../actions/review.action');
+const { statusCode, successMessage } = require('../helpers/httpResponse');
 
 module.exports = {
   create: async (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
-    const {
-      title,
-      content,
-      rating,
-    } = req.body;
-
-    if (!hasValidRating(rating)) {
-      res.status(400).json({
-        message: 'rating must be an integer between 1-5',
-      });
-    }
-
     try {
-      const product = await Product.findOne({ _id: id }).populate('reviews');
-
-      if (!product) {
-        res.status(400).json({
-          message: 'invalid product id',
-        });
-        return;
-      }
-
-      const conditions = {
-        'customer.user_id': userId,
-        products: {
-          $elemMatch: {
-            product_id: {
-              $in: [id],
-            },
-          },
-        },
-      };
-
-      const userOrder = await Order.findOne(conditions);
-
-      if (!userOrder) {
-        res.status(400).json({
-          message: 'user has not purchased this product',
-        });
-        return;
-      }
-
-      const hasPrevReview = product.reviews
-        .findIndex(el => (el.user_id == userId)) !== -1;
-
-      if (hasPrevReview) {
-        res.status(400).json({
-          message: 'user has reviewed this product before',
-        });
-        return;
-      }
-
-      const newReview = new Review({
-        user_id: userId,
+      const { userId } = req.decoded;
+      const { id: productId } = req.params;
+      const {
         title,
         content,
         rating,
+      } = req.body;
+
+      await reviewAction.create(userId, productId, title, content, rating);
+      res.status(statusCode.created).json({
+        message: successMessage.CREATE_REVIEW,
       });
-
-      await newReview.save();
-
-      product.reviews.push(newReview);
-
-      product.save();
-
-      res.status(201).json({
-        message: 'review has been created',
-      });
-    } catch (err) {
-      res.status(400).json({
-        message: err.message,
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
       });
     }
   },
   updateById: async (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
-    const {
-      title,
-      content,
-      rating,
-    } = req.body;
-
     try {
-      const result = await Review.updateOne({ _id: id, user_id: userId }, {
+      const { userId } = req.decoded;
+      const { id } = req.params;
+      const {
         title,
         content,
         rating,
-      }, { runValidators: true });
+      } = req.body;
 
-      const notAuthorized = result.n === 0;
-
-      if (notAuthorized) {
-        res.status(401).json({
-          message: 'User is not authorized to update the review',
-        });
-        return;
-      }
-
-      res.status(200).json({
-        message: 'review has been updated',
+      await reviewAction.updateById(userId, id, title, content, rating);
+      res.status(statusCode.ok).json({
+        message: successMessage.UPDATE_REVIEW_BY_ID(id),
       });
-    } catch (err) {
-      res.status(400).json({
-        message: err.message,
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
       });
     }
   },
   deleteById: async (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
-
     try {
-      const result = await Review.deleteOne({ _id: id, user_id: userId });
+      const { userId } = req.decoded;
+      const { id } = req.params;
 
-      const notAuthorized = result.n === 0;
-
-      if (notAuthorized) {
-        res.status(401).json({
-          message: 'User is not authorized to delete the review',
-        });
-        return;
-      }
-
-      const conditions = {
-        reviews: {
-          $in: [id],
-        },
-      };
-
-      const docs = {
-        $pull: {
-          reviews: id,
-        },
-      };
-
-      await Product.updateOne(conditions, docs);
-
-      res.status(200).json({
-        message: 'review has been removed',
+      await reviewAction.deleteById(userId, id);
+      res.status(statusCode.ok).json({
+        message: successMessage.REMOVE_REVIEW_BY_ID(id),
       });
-    } catch (err) {
-      res.status(400).json({
-        message: err.message,
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
       });
     }
   },
   like: async (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
-    let review;
-
     try {
-      review = await Review.findOne({ _id: id });
+      const { userId } = req.decoded;
+      const { id } = req.params;
 
-      if (!review) {
-        res.status(400).json({
-          message: 'invalid review id',
-        });
-        return;
-      }
-    } catch (err) {
-      res.status(400).json({
-        message: 'invalid review id',
+      await reviewAction.like(userId, id);
+
+      res.status(statusCode.ok).json({
+        message: successMessage.LIKE_REVIEW_BY_ID(id),
       });
-    }
-
-    const prevLikeIndex = review.likes.findIndex(el => (
-      el == userId
-    ));
-
-    if (prevLikeIndex !== -1) {
-      review.likes.splice(prevLikeIndex, 1);
-
-      try {
-        await review.save();
-
-        res.status(200).json({
-          message: 'you have unliked this review',
-        });
-      } catch (err) {
-        res.status(500).json({
-          message: err.message,
-        });
-      }
-      return;
-    }
-
-    const dislikeIndexToRemove = review.dislikes.findIndex(el => (
-      el == userId
-    ));
-
-    if (dislikeIndexToRemove !== -1) {
-      review.dislikes.splice(dislikeIndexToRemove, 1);
-    }
-
-    review.likes.push(userId);
-
-    try {
-      await review.save();
-
-      res.status(200).json({
-        message: 'review has been liked successfully',
-      });
-    } catch (err) {
-      res.status(500).json({
-        message: err.message,
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
       });
     }
   },
   dislike: async (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
-    let review;
-
     try {
-      review = await Review.findOne({ _id: id });
+      const { userId } = req.decoded;
+      const { id } = req.params;
 
-      if (!review) {
-        res.status(400).json({
-          message: 'invalid review id',
-        });
-        return;
-      }
-    } catch (err) {
-      res.status(400).json({
-        message: 'invalid review id',
+      await reviewAction.dislike(userId, id);
+
+      res.status(statusCode.ok).json({
+        message: successMessage.DISLIKE_REVIEW_BY_ID(id),
       });
-    }
-
-    const prevDislikeIndex = review.dislikes.findIndex(el => (
-      el == userId
-    ));
-
-    if (prevDislikeIndex !== -1) {
-      review.dislikes.splice(prevDislikeIndex, 1);
-
-      try {
-        await review.save();
-
-        res.status(200).json({
-          message: 'you have undisliked this review',
-        });
-      } catch (err) {
-        res.status(500).json({
-          message: err.message,
-        });
-      }
-      return;
-    }
-
-    const likeIndexToRemove = review.likes.findIndex(el => (
-      el == userId
-    ));
-
-    if (likeIndexToRemove !== -1) {
-      review.likes.splice(likeIndexToRemove, 1);
-    }
-
-    review.dislikes.push(userId);
-
-    try {
-      await review.save();
-
-      res.status(200).json({
-        message: 'review has been disliked successfully',
-      });
-    } catch (err) {
-      res.status(500).json({
-        message: err.message,
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
       });
     }
   },

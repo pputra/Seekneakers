@@ -37,6 +37,12 @@ const successMessage = {
   REMOVE_ADDRESS_BY_ID: id => (`address with id: ${id} has been removed`),
   // shipping actions
   FETCH_SHIPPING_RATES: 'shipping rates has been fetched successfully',
+  // review actions
+  CREATE_REVIEW: 'review has been created',
+  UPDATE_REVIEW_BY_ID: id => (`review with id: ${id} has been updated`),
+  REMOVE_REVIEW_BY_ID: id => (`review with id: ${id} has been removed`),
+  LIKE_REVIEW_BY_ID: id => (`like review with id: ${id} has been toggled`),
+  DISLIKE_REVIEW_BY_ID: id => (`dislike review with id: ${id} has been toggled`),
 };
 
 const errMessage = {
@@ -61,6 +67,12 @@ const errMessage = {
   REMOVE_ADDRESS_UNAUTHORIZED: 'user is not authorized to remove the address',
   // shipping actions
   FETCH_SHIPPING_RATES: 'invalid shipping info',
+  // review actions
+  INVALID_REVIEW_RATING: 'rating must be an integer between 1-5',
+  INVALID_PRODUCT_ID: 'invalid product id',
+  USER_HAS_NOT_PURCHASED_PRODUCT: 'user has not purchased this product',
+  USER_HAS_REVIEWED_THE_PRODUCT: 'user has reviewed this product before',
+  USER_UNAUTHORIZED_TO_UPDATE_THE_REVIEW: 'user is not authorized to update the review',
 };
 
 module.exports = {
