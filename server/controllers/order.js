@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 const orderAction = require('../actions/order.action');
+const cartAction = require('../actions/cart.action');
 const orderQueue = require('../lib/rabbitMQ/publishers/order.publish');
 
 const { hasEmptyField } = require('../helpers/validator');
@@ -48,6 +49,8 @@ module.exports = {
       if (hasEmptyField(fields)) {
         throw new Error(errMessage.USER_HAS_EMPTY_INFO);
       }
+
+      await cartAction.emptyCart(userId);
 
       orderQueue
         .publish(userId, name, street, city, state, zip, country, productsToCheckout, chosenRate);

@@ -4,7 +4,6 @@ const Order = require('../db/models/Order');
 const User = require('../db/models/User');
 
 const productAction = require('./product.action');
-const cartAction = require('./cart.action');
 const { errMessage } = require('../helpers/httpResponse');
 
 const getAll = userId => new Promise(async (resolve, reject) => {
@@ -69,7 +68,6 @@ const create = (userId, name, street, city, state,
       },
     });
 
-    await cartAction.emptyCart(userId);
     return resolve(addedOrder);
   } catch (e) {
     return reject(e);

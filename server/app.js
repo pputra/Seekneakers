@@ -7,6 +7,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 const db = require('./db');
+const orderQueue = require('./lib/rabbitMQ/consumers/order.consume');
 const indexRouter = require('./routes/index');
 
 db.connect();
@@ -15,6 +16,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+orderQueue.listen();
 
 app.use('/', indexRouter);
 

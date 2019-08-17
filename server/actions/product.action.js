@@ -124,7 +124,7 @@ const getProductsInStock = products => new Promise(async (resolve, reject) => {
         price,
       };
 
-      const currStock = product.product_id.stock;
+      const { stock: currStock } = await getById(product.product_id._id);
 
       if (currStock === 0) {
         // eslint-disable-next-line no-continue
