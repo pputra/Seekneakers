@@ -1,6 +1,7 @@
 # Seekneakers
 
-a full stack e-commerce web app that allows users to order sneakers
+A full stack e-commerce web app that allows users to order sneakers.
+[Check out the project here](https://seekneakers.web.app/)
 
 # Features
 
