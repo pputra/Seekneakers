@@ -5,14 +5,37 @@ a full stack e-commerce web app that allows users to order sneakers
 # Features
 
 * User authentications/authorizations
-* search/filter/sort products
-* products stock availability/review/description
-* cart system
-* order queueing
-* restock options
-* multi steps checkout
-* shipping cost calculation based on user location
-* order history
+* Search/filter/sort products
+* Products stock availability/review/description
+* Cart system
+* Order queueing
+* Restock options
+* Multi steps checkout
+* Shipping cost calculation based on user location
+* Order history
+
+# Built With
+
+### Back End
+* ExpressJs
+* NodeJs
+* MongoDB
+* RabbitMQ
+* Mongoose
+* JWT
+* Google Cloud Storage
+
+### Front End
+* ReactJs
+* Redux
+* MaterialUI
+* HTML
+* CSS
+
+### Deployment
+* Firebase Hosting
+* Google Compute Engine
+* PM2
 
 # Screenshots
 
