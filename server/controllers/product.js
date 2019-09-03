@@ -1,137 +1,123 @@
-const Product = require('../models/Product');
-const Category = require('../models/Category');
+/* eslint-disable no-underscore-dangle */
 const { sortByQueryType } = require('../helpers/product');
+const productAction = require('../actions/product.action');
+const { statusCode, successMessage, errMessage } = require('../helpers/httpResponse');
 
 module.exports = {
-  getAll: (req, res) => {
-    const { keywords } = req.query;
+  getAll: async (req, res) => {
+    try {
+      const { keywords, sort_by: sortBy } = req.query;
+      let products;
 
-    if (keywords) {
-      module.exports.getByKeywords(res, keywords);
-      return;
-    }
-
-    Product.find().populate('category_id', 'name').populate('reviews').then((products) => {
-      const { sort_by } = req.query;
-      if (sort_by) {
-        sortByQueryType(sort_by, products);
+      if (keywords) {
+        products = await productAction.getByKeywords(keywords);
+      } else {
+        products = await productAction.getAll();
       }
-      
-      res.status(200).json({message: 'products have been fetched', products});
-    }).catch((err) => {
-      res.status(400).json({message: 'unable to fetch products'});
-    });
-  },
-  getById: (req, res) => {
-    const { id } = req.params;
 
-    const populateReviewOptions= {
-      path: 'reviews',
-      populate: {
-        path: 'user_id',
-        model: 'User',
-        select: ['first_name', 'last_name']
-      },
-    };
-    
-    Product
-      .findOne({_id: id})
-      .populate('category_id', 'name')
-      .populate(populateReviewOptions)
-      .exec().then((product) => {
-        res.status(200).json({message: 'product has been fetched', product});
-    })
-    .catch((err) => {
-      res.status(400).json({message: 'unable to fetch products'});
-    });
-  },
-  getByKeywords: (res, keywords) => {
-    const options= {
-      name: new RegExp(keywords, 'i'),
-    }
-    
-    Product.find(options, 'name image_src').then((products) => {
-      res.status(200).json({
-        message: 'products have been fetched',
+      if (sortBy) {
+        sortByQueryType(sortBy, products);
+      }
+
+      res.status(statusCode.ok).json({
+        message: successMessage.FETCH_PRODUCTS,
         products,
       });
-    }).catch((err) => {
-      res.status(400).json({message: 'unable to fetch products'});
-    });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: errMessage.FETCH_PRODUCTS,
+      });
+    }
+  },
+  getById: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const product = await productAction.getById(id);
+      res.status(statusCode.ok).json({
+        message: successMessage.FETCH_PRODUCT,
+        product,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: errMessage.FETCH_PRODUCT,
+      });
+    }
   },
   create: async (req, res) => {
-    const {
-      name,
-      price,
-      image_src,
-      description,
-      category_id,
-    } = req.body;
-
     try {
-      const newProduct = await new Product({
+      const {
         name,
         price,
-        image_src,
+        image_src: imageSrc,
         description,
-        category_id,
-      }).save();
-      await Category.updateOne({_id: category_id}, {$push: {products: newProduct._id}});
-      res.status(201).json({message: 'product has been added', product: newProduct});
-    } catch (err) {
-      res.status(400).json({message: err.message});
+        category_id: categoryId,
+      } = req.body;
+
+      const newProduct = await productAction.create(name, price, imageSrc, description, categoryId);
+      res.status(statusCode.created).json({
+        message: successMessage.CREATE_PRODUCT,
+        product: newProduct,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
     }
   },
   updateById: async (req, res) => {
-    const {
-      name,
-      price,
-      image_src,
-      description,
-      category_id,
-      stock,
-    } = req.body;
-    const { id } = req.params;
-  
     try {
-      const prevProduct = await Product.findOne({_id: id});
-      const result = await Product.updateOne({_id: id}, {
+      const {
         name,
         price,
-        image_src,
+        image_src: imageSrc,
         description,
-        category_id,
+        category_id: categoryId,
         stock,
-      }, {runValidators: true});
+      } = req.body;
 
-      if (prevProduct.category_id != category_id) {
-        await Category.updateOne({_id: prevProduct.category_id}, {$pull: {products: id}});
-        await Category.updateOne({_id: category_id}, {$push: {products: id}});
-      }
+      const { id } = req.params;
 
-      res.status(200).json({message: `product with id: ${id} has been updated`, data: result});
-    } catch (err) {
-      res.status(400).json({message: err.message});
+      const result = await productAction.updateById(name, price, imageSrc,
+        description, categoryId, stock, id);
+
+      res.status(statusCode.ok).json({
+        message: successMessage.UPDATE_PRODUCT_BY_ID(id),
+        data: result,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
     }
   },
-  deleteById: (req, res) => {
-    const { id } = req.params;
-
-    Product.deleteOne({_id: id}).then((result) => {
-      res.status(202).json({message: `product with id: ${id} has been deleted`, data: result});
-    }).catch((err) => {
-      res.status(400).json({message: err.message});
-    });
+  deleteById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await productAction.deleteById(id);
+      res.status(statusCode.ok).json({
+        message: successMessage.REMOVE_PRODUCT_BY_ID(id),
+        data: result,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
+    }
   },
-  restockById: (req, res) => {
-    const { id } = req.params;
+  restockById: async (req, res) => {
+    try {
+      const { id } = req.params;
 
-    Product.updateOne({_id: id}, {
-      stock: 10,
-    }).then((result) => {
-      res.status(200).json({message: `product with id: ${id} has been restocked`, data: result});
-    }).catch((err) => {
-      res.status(400).json({message: err.message});
-    });
-  }
+      const result = await productAction.restockById(id, 10);
+      res.status(200).json({
+        message: successMessage.RESTOCK_PRODUCT_BY_ID(id),
+        data: result,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
+    }
+  },
 };

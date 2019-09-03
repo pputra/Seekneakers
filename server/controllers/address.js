@@ -1,69 +1,84 @@
-const Address = require('../models/Address');
-const User = require('../models/User');
+/* eslint-disable no-underscore-dangle */
+const addressAction = require('../actions/adress.action');
+const { statusCode, successMessage } = require('../helpers/httpResponse');
 
 module.exports = {
-  getById: (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
-
-    Address.findOne({_id: id, user_id: userId}).then((address) => {
-      const notAuthorized = !address;
-
-      if (notAuthorized) {
-        return res.status(401).json({message: `User is not authorized to access the address`});
-      }
-      res.status(200).json({message: 'address has been fetched', address});
-    }).catch((err) => {
-      res.status(400).json({message: err.message});
-    });
-  },
-  create: async (req, res) => {
-    const { userId } = req.decoded;
-    const { street, city, state, zip, country } = req.body;
-
+  getById: async (req, res) => {
     try {
-      const address = await new Address({user_id: userId, street, city, state, zip, country}).save();
-      await User.updateOne({_id: userId}, {$push:{addresses: address._id}});
-      res.status(201).json({message: 'address has been added', address});
-    } catch (err) {
-      res.status(400).json(err.message);
+      const { userId } = req.decoded;
+      const { id } = req.params;
+      const address = await addressAction.getById(userId, id);
+
+      res.status(statusCode.ok).json({
+        message: successMessage.FETCH_ADDRESS,
+        address,
+      });
+    } catch (e) {
+      res.status(statusCode.unauthorized).json({
+        message: e.message,
+      });
     }
   },
-  updateById: (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
-    const { street, city, state, zip, country } = req.body;
+  create: async (req, res) => {
+    try {
+      const { userId } = req.decoded;
+      const {
+        street,
+        city,
+        state,
+        zip,
+        country,
+      } = req.body;
+      const address = await addressAction.create(userId, street, city, state, zip, country);
 
-    Address.updateOne({_id: id, user_id: userId},{
-      street, 
-      city, 
-      state, 
-      zip, 
-      country
-    },{runValidators: true}).then((result) => {
-      const notAuthorized = result.n === 0;
-
-      if (notAuthorized) {
-        return res.status(401).json({message: `User is not authorized to change the address`});
-      }
-      res.status(200).json({message: `address with id: ${id} has been updated`, result});
-    }).catch((err) => {
-      res.status(400).json({message: err.message});
-    });
+      res.status(statusCode.created).json({
+        message: successMessage.CREATE_ADDRESS,
+        address,
+      });
+    } catch (e) {
+      res.status(statusCode.badRequest).json({
+        message: e.message,
+      });
+    }
   },
-  deleteById: (req, res) => {
-    const { userId } = req.decoded;
-    const { id } = req.params;
+  updateById: async (req, res) => {
+    try {
+      const { userId } = req.decoded;
+      const { id: addressId } = req.params;
+      const {
+        street,
+        city,
+        state,
+        zip,
+        country,
+      } = req.body;
+      const result = await addressAction.updateById(userId, addressId,
+        street, city, state, zip, country);
 
-    Address.deleteOne({_id: id, user_id: userId}).then((result) => {
-      const notAuthorized = result.n === 0;
+      res.status(statusCode.ok).json({
+        message: successMessage.UPDATE_ADDRESS_BY_ID(addressId),
+        data: result,
+      });
+    } catch (e) {
+      res.status(statusCode.unauthorized).json({
+        message: e.message,
+      });
+    }
+  },
+  deleteById: async (req, res) => {
+    try {
+      const { userId } = req.decoded;
+      const { id: addressId } = req.params;
+      const result = await addressAction.deleteById(addressId, userId);
 
-      if (notAuthorized) {
-        return res.status(401).json({message: `User is not authorized to remove the address`});
-      }
-      res.status(202).json({message: `address with id: ${id} has been updated`, result});
-    }).catch((err) => {
-      res.status(400).json({message: err.message});
-    });
-  }
+      res.status(statusCode.ok).json({
+        message: successMessage.REMOVE_ADDRESS_BY_ID(addressId),
+        data: result,
+      });
+    } catch (e) {
+      res.status(statusCode.unauthorized).json({
+        message: e.message,
+      });
+    }
+  },
 };

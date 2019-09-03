@@ -6,19 +6,22 @@ const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const { connect } = require('./helpers/database');
+const db = require('./db');
+const orderQueue = require('./lib/rabbitMQ/consumers/order.consume');
 const indexRouter = require('./routes/index');
 
-connect();
+db.connect();
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+orderQueue.listen();
 
 app.use('/', indexRouter);
 
 app.listen(port, () => {
+  // eslint-disable-next-line no-console
   console.log(`listening on port ${port}`);
 });
 
